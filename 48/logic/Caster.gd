@@ -20,6 +20,7 @@ var clickGoal = 30;							# note that starts at HALF of goal
 var clickStartPercentage = 0.7;			# % of click goal where counter starts
 var numClicks = 0;							# used for alternating left/right click (using power)
 var hintTimers = {};
+var hints = {};
 
 # bobber instance
 var bobber = preload("res://scenes/Bobber.tscn");
@@ -46,6 +47,9 @@ onready var DepthGageHint = preload("res://scenes/DepthGageHint.tscn");
 onready var minigamePanel: Control = $"minigame";
 onready var clickIndicator: ProgressBar = $"minigame/progress-panel/ProgressBar";
 
+# results screen for after catching fish
+onready var resultsPanel: Panel = $result;
+
 var rng = RandomNumberGenerator.new();
 
 enum FishRarity {
@@ -60,9 +64,9 @@ func _ready():
 	clickCounter = clickGoal * clickStartPercentage;
 	
 	# tempoary assign
-	AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-1, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
-	AddFish(FishRarity.RARE, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-1, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
-	AddFish(FishRarity.MYTHICAL, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-1, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	AddFish(FishRarity.RARE, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	AddFish(FishRarity.MYTHICAL, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 
 
 func _physics_process(delta):
@@ -104,6 +108,8 @@ func _process(delta):
 			isInMinigame = false;
 			CatchFish();
 	else:
+		if(Global.isInputPaused):
+			return;
 		if Input.is_action_just_pressed("Throw") and !hasThrownLine:	# click to throw line
 			animPlayer.play("Cast");
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and !isBobberLocked:	# click to lock bobber
@@ -231,10 +237,11 @@ func AddFish(rarity, location):
 	activeFishes.append(newFish);
 	
 	# get ID for caching dictionaries
-	var newFishID = activeFishes.find(newFish, 0);
+	#var newFishID = activeFishes.find(newFish, 0);
 
 	# add hint timer to dictionary (to reference outside)
 	hintTimers[newFish] = hintTimer;
+	hints[newFish] = fishHintInstance;
 
 	# instance a depth gage hint
 	var depthGageHint = DepthGageHint.instance();
@@ -250,9 +257,11 @@ func AddFish(rarity, location):
 	print("Created fish of ", FishRarity.keys()[rarity], " Rarity at ", location);
 
 func RemoveFish(fishID):
-	print(hintTimers, " ", fishID);
-	hintTimers.get(activeFishes[fishID]).queue_free();
-	depthGageHints.get(activeFishes[fishID]).queue_free();
+	var fish = activeFishes[fishID];
+
+	hintTimers.get(fish).queue_free();
+	depthGageHints.get(fish).queue_free();
+	hints.get(fish).queue_free();
 	activeFishes.remove(fishID);
 
 func CheckBobberCloseToFish(point):
@@ -262,7 +271,6 @@ func CheckBobberCloseToFish(point):
 		var adjustedFishLocation = Vector3(fish.location.x, 0, fish.location.z);
 		var xzDist = point.distance_to(adjustedFishLocation);
 		var yDist = abs((-lineDistance) - fish.location.y);
-		print(yDist);
 
 		# if is close enough inc height
 		if(xzDist < fishBobberMaxRange and yDist < fishBobberMaxRangeHeight):
@@ -272,7 +280,7 @@ func CheckBobberCloseToFish(point):
 			print("near (xz: ", xzDist ,"), (y: ", yDist, ") a fish ID of ", fishNearBobberID);
 
 			# set timer
-			catchTimer.wait_time = rng.randf_range(1.5, 3) * (fish.rarity + 1);
+			catchTimer.wait_time = rng.randf_range(1.5, 3) + (fish.rarity + 1);
 			catchTimer.connect("timeout", self, "BiteLine");
 			catchTimer.start();
 
@@ -286,10 +294,15 @@ func CatchFish():
 	RemoveFish(fishNearBobberID);
 	print("caught fish!");
 
+	# reel in line
+	CatchLine();
+
+	# show results screen
+	Global.isInputPaused = true;
+	var item = Item.new("Ooga booga", "oogiest of boogiests");
+	resultsPanel.ShowItem(item);
+
 	# check end game conditions
 	if(activeFishes.size() == 0):
 		# end game
 		print("level clear!");
-
-	# reel in line
-	CatchLine();

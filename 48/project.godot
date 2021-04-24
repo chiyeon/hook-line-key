@@ -33,6 +33,10 @@ boot_splash/fullsize=false
 boot_splash/bg_color=Color( 0.419608, 0.419608, 0.419608, 1 )
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://logic/Global.gd"
+
 [display]
 
 window/size/width=320

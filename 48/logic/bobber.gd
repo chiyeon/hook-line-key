@@ -21,4 +21,4 @@ func ShowBobber():
 
 func _process(delta):
 	if(hidingBobber):
-		bobber.transform.origin = bobber.transform.origin.linear_interpolate(Vector3(0, -1, 0), 0.076);
+		bobber.transform.origin = bobber.transform.origin.linear_interpolate(Vector3(0, -1.5, 0), 0.076);
