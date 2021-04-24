@@ -3,3 +3,7 @@
   - depth gage, where fish is and where hook is
   - when bbobberr is locked
   - minigame -> which to click and gage for how much to click 
+
+goals: 
+- make fishing more satisfying -> no indicator where rod will go, must guess; pull back to build force in direction
+- collectable
