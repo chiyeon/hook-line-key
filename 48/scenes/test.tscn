@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://textures/particles/circle.png" type="Texture" id=1]
 [ext_resource path="res://models/boat.fbx" type="PackedScene" id=2]
@@ -66,6 +66,9 @@ _data = [ Vector2( 0, 0 ), 0.0, 3.09424, 0, 0, Vector2( 1, 1 ), 0.0967616, 0.0, 
 [sub_resource type="Gradient" id=8]
 offsets = PoolRealArray( 0, 0.456067, 0.803347 )
 colors = PoolColorArray( 0, 0, 0, 1, 0.136719, 0.136719, 0.136719, 1, 0, 0, 0, 1 )
+
+[sub_resource type="CanvasItemMaterial" id=10]
+light_mode = 1
 
 [node name="World" type="Spatial"]
 
@@ -138,6 +141,47 @@ scale_amount = 2.0
 scale_amount_random = 0.49
 scale_amount_curve = SubResource( 7 )
 color_ramp = SubResource( 8 )
+
+[node name="minigame" type="Control" parent="boat"]
+visible = false
+margin_right = 320.0
+margin_bottom = 240.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="progress-panel" type="Panel" parent="boat/minigame"]
+material = SubResource( 10 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -146.237
+margin_top = -60.0
+margin_right = -114.237
+margin_bottom = 90.0
+rect_pivot_offset = Vector2( 16, 75 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="boat/minigame/progress-panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -70.0
+margin_top = -13.0
+margin_right = 70.0
+margin_bottom = 12.0
+rect_rotation = -90.0
+rect_pivot_offset = Vector2( 70, 12 )
+max_value = 50.0
+value = 32.9
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="FishHint" parent="." instance=ExtResource( 7 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.28892, 0, 3.22577 )

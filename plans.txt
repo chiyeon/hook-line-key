@@ -1,0 +1,5 @@
+# day 2
+- indicators
+  - depth gage, where fish is and where hook is
+  - when bbobberr is locked
+  - minigame -> which to click and gage for how much to click 

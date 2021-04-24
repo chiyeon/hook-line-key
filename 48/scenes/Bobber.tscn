@@ -54,6 +54,7 @@ _data = [ Vector2( 0.019084, 0 ), 0.0, 4.26742, 0, 0, Vector2( 0.80916, 1 ), 0.0
 colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 1 )
 
 [node name="Bobber" type="Position3D"]
+process_priority = 1
 script = ExtResource( 5 )
 
 [node name="bobber" parent="." instance=ExtResource( 1 )]
@@ -110,5 +111,7 @@ color_ramp = SubResource( 10 )
 wait_time = 0.15
 one_shot = true
 autostart = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -11,12 +11,15 @@ var activeFishes = [];						# list of all active fish hints
 var fishBobberMaxRange = 1;				# max range of a bobber being considered near a fish
 var fishBobberMaxRangeHeight = 2;
 var bobberNearActiveFish = false;		# is bobber in radius of fish hint
-#var fishNearBobberID: int;				# id of the fish that is near the bobber
+var fishNearBobberID: int;				# id of the fish that is near the bobber
 onready var catchTimer = $"catch-timer";	# used to time the capture of fish
 var isCatchingFish = false;				# if player is in act of reeling in;
 var isInMinigame = false;
-var clickCounter = 0;
-var clickGoal = 0;
+var clickCounter = 0;						# up every click, goes down based on rarity of fish
+var clickGoal = 30;							# note that starts at HALF of goal
+var clickStartPercentage = 0.7;			# % of click goal where counter starts
+var numClicks = 0;							# used for alternating left/right click (using power)
+var hintTimers = {};
 
 # bobber instance
 var bobber = preload("res://scenes/Bobber.tscn");
@@ -30,6 +33,10 @@ var lineDistance = 0;					# length of fishing line. becomes static once bobber i
 var lineDropSpeed = 2;
 var maxDepth = 10;
 
+# minigame stuff
+onready var minigamePanel: Control = $"minigame";
+onready var clickIndicator: ProgressBar = $"minigame/progress-panel/ProgressBar";
+
 var rng = RandomNumberGenerator.new();
 
 enum FishRarity {
@@ -40,6 +47,8 @@ enum FishRarity {
 
 func _ready():
 	rng.randomize();
+	clickIndicator.max_value = clickGoal;
+	clickCounter = clickGoal * clickStartPercentage;
 	
 	# tempoary assign
 	AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-1, -10), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
@@ -57,18 +66,30 @@ func _physics_process(delta):
 func _process(delta):
 
 	if isInMinigame:
-		clickGoal = 25;
+		# update indicator
+		clickIndicator.value = clickCounter;
+		# decrement clickCounter based on rarity of fish
+		clickCounter -= delta * (activeFishes[fishNearBobberID].rarity + 3);
+		# cap at 0
+		if(clickCounter <= 0):
+			clickCounter = 0;
 
-		if(pow(-1, clickCounter) == 1):
+		# only alternating between right/left works
+		if(pow(-1, numClicks) == 1):
 			if Input.is_action_just_pressed("Throw"):
 				clickCounter += 1;
+				numClicks += 1;
 				print(clickGoal - clickCounter + 1, " left");
 		else:
 			if Input.is_action_just_pressed("Reel"):
 				clickCounter += 1;
+				numClicks += 1;
 				print(clickGoal - clickCounter + 1, " left");
 
+		# if we hit goal minigame over
 		if(clickCounter >= clickGoal):
+			minigamePanel.visible = false;
+			isInMinigame = false;
 			CatchFish();
 	else:
 		if Input.is_action_just_pressed("Throw") and !hasThrownLine:	# click to throw line
@@ -77,6 +98,7 @@ func _process(delta):
 			LockBobber();
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and isBobberLocked and isCatchingFish:	# if fish bit, click to catch
 			isInMinigame = true;
+			minigamePanel.visible = true;
 			print("started catching minigame click!");
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and isBobberLocked and !isCatchingFish and !bobberNearActiveFish: # reel in
 			CatchLine();
@@ -136,10 +158,14 @@ func CatchLine():
 		isCatchingFish = false;
 
 		# click count
-		clickCounter = 0;
+		clickCounter = clickGoal/2;
+		numClicks = 0;
 
 		# no minigame
 		isInMinigame = false;
+
+		# reveal bobber
+		bobberInstance.ShowBobber();
 
 		# catch, delete bobber
 		hasThrownLine = false;
@@ -180,10 +206,19 @@ func AddFish(rarity, location):
 	add_child(hintTimer);
 	hintTimer.start();
 	
+	var newFish = Fish.new(rarity, location);
+
 	# add new fish object to list
-	activeFishes.append(Fish.new(rarity, location));
+	activeFishes.append(newFish);
+
+	# add hint timer to dictionary (to reference outside)
+	hintTimers[activeFishes.find(newFish, 0)] = hintTimer;
 	
 	print("Created fish of ", FishRarity.keys()[rarity], " Rarity at ", location);
+
+func RemoveFish(fishID):
+	activeFishes.remove(fishID);
+	hintTimers.get(fishID).queue_free();
 
 func CheckBobberCloseToFish(point):
 	if(bobberNearActiveFish):
@@ -196,19 +231,28 @@ func CheckBobberCloseToFish(point):
 		if(dist < fishBobberMaxRange and fish.location.y + lineDistance < fishBobberMaxRangeHeight):
 			# set vars
 			bobberNearActiveFish = true;
-			var fishID = activeFishes.find(fish, 0);
-			print("near (", dist ,") a fish ID of ", fishID);
+			fishNearBobberID = activeFishes.find(fish, 0);
+			print("near (", dist ,") a fish ID of ", fishNearBobberID);
 
 			# set timer
 			catchTimer.wait_time = rng.randf_range(1.5, 3) * (fish.rarity + 1);
-			catchTimer.connect("timeout", self, "BiteLine", [fishID]);
+			catchTimer.connect("timeout", self, "BiteLine");
 			catchTimer.start();
 
-func BiteLine(fishID):
-	print("Fish ", fishID, " bit the line !");
+func BiteLine():
+	print("Fish ", fishNearBobberID, " bit the line !");
+	bobberInstance.HideBobber();
 	isCatchingFish = true;
 
 func CatchFish():
+	# remove from active fishes array
+	RemoveFish(fishNearBobberID);
+	print("caught fish!");
+
+	# check end game conditions
+	if(activeFishes.size() == 0):
+		# end game
+		print("level clear!");
+
 	# reel in line
 	CatchLine();
-	print("caught fish!");
