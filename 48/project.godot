@@ -11,7 +11,18 @@ config_version=4
 [application]
 
 config/name="48"
+run/main_scene="res://scenes/test.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=400
+window/size/height=300
+window/size/resizable=false
+window/size/test_width=800
+window/size/test_height=600
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [physics]
 
