@@ -1,15 +1,8 @@
-extends Spatial
+extends Position3D
 
-var moveDistance = 0.05;
-var moveSpeed = 2;
-var initialY;
+onready var impactSplash = $impact_splash;
+onready var impactParticles = $impact_particles;
 
-var c = 0;
-
-func _ready():
-	initialY = transform.origin.y;
-
-func _process(delta):
-	c += delta;
-	if(c > PI * 2): c = 0;
-	transform.origin.y = initialY + sin(c * moveSpeed) * moveDistance;
+func _on_Timer_timeout():
+	impactSplash.emitting = true;
+	impactParticles.emitting = true;

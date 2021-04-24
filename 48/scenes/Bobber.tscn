@@ -1,39 +1,60 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://models/bobber.fbx" type="PackedScene" id=1]
 [ext_resource path="res://textures/particles/circle.png" type="Texture" id=2]
-[ext_resource path="res://logic/bobber.gd" type="Script" id=3]
+[ext_resource path="res://logic/BobberAnimation.gd" type="Script" id=3]
 [ext_resource path="res://textures/particles/circle_thick.png" type="Texture" id=4]
+[ext_resource path="res://logic/Bobber.gd" type="Script" id=5]
 
-[sub_resource type="SpatialMaterial" id=10]
+[sub_resource type="SpatialMaterial" id=1]
+render_priority = 2
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
 params_blend_mode = 1
 albedo_texture = ExtResource( 4 )
 
-[sub_resource type="QuadMesh" id=11]
-material = SubResource( 10 )
+[sub_resource type="QuadMesh" id=2]
+material = SubResource( 1 )
 
-[sub_resource type="Curve" id=8]
+[sub_resource type="Curve" id=3]
 _data = [ Vector2( 0, 0 ), 0.0, 3.09424, 0, 0, Vector2( 1, 1 ), 0.0967616, 0.0, 0, 0 ]
 
-[sub_resource type="Gradient" id=9]
-offsets = PoolRealArray( 0, 0.456067, 0.803347 )
-colors = PoolColorArray( 0, 0, 0, 1, 0.714844, 0.714844, 0.714844, 1, 0, 0, 0, 1 )
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0, 0.221757, 0.76569 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.880859, 0.880859, 0.880859, 1, 0, 0, 0, 1 )
 
-[sub_resource type="SpatialMaterial" id=6]
+[sub_resource type="SpatialMaterial" id=5]
+render_priority = 2
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
-params_diffuse_mode = 1
 params_blend_mode = 1
 albedo_texture = ExtResource( 2 )
 
-[sub_resource type="QuadMesh" id=7]
-material = SubResource( 6 )
+[sub_resource type="QuadMesh" id=6]
+material = SubResource( 5 )
+
+[sub_resource type="SpatialMaterial" id=7]
+render_priority = 2
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+params_blend_mode = 1
+params_billboard_mode = 1
+albedo_color = Color( 0.411765, 0.784314, 0.878431, 1 )
+
+[sub_resource type="QuadMesh" id=8]
+material = SubResource( 7 )
+size = Vector2( 0.15, 0.15 )
+
+[sub_resource type="Curve" id=9]
+_data = [ Vector2( 0.019084, 0 ), 0.0, 4.26742, 0, 0, Vector2( 0.80916, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=10]
+colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 1 )
 
 [node name="Bobber" type="Position3D"]
+script = ExtResource( 5 )
 
 [node name="bobber" parent="." instance=ExtResource( 1 )]
 script = ExtResource( 3 )
@@ -44,23 +65,50 @@ amount = 2
 lifetime = 4.0
 randomness = 0.37
 lifetime_randomness = 0.11
-mesh = SubResource( 11 )
+mesh = SubResource( 2 )
 direction = Vector3( 0, 1, 0 )
 gravity = Vector3( 0, 0, 0 )
 scale_amount_random = 0.4
-scale_amount_curve = SubResource( 8 )
-color_ramp = SubResource( 9 )
+scale_amount_curve = SubResource( 3 )
+color_ramp = SubResource( 4 )
 
 [node name="impact_splash" type="CPUParticles" parent="."]
-transform = Transform( 1, 0, 0, 0, -1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0.029, 0 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.021, 0 )
 emitting = false
 amount = 1
-lifetime = 5.0
+lifetime = 4.0
 one_shot = true
-mesh = SubResource( 7 )
+preprocess = 0.25
+explosiveness = 1.0
+mesh = SubResource( 6 )
 direction = Vector3( 0, 1, 0 )
 gravity = Vector3( 0, 0, 0 )
-scale_amount = 2.0
-scale_amount_random = 0.4
-scale_amount_curve = SubResource( 8 )
-color_ramp = SubResource( 9 )
+scale_amount = 2.5
+scale_amount_curve = SubResource( 3 )
+color_ramp = SubResource( 4 )
+
+[node name="impact_particles" type="CPUParticles" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
+emitting = false
+amount = 12
+lifetime = 0.75
+one_shot = true
+explosiveness = 0.97
+randomness = 0.11
+lifetime_randomness = 0.73
+mesh = SubResource( 8 )
+direction = Vector3( 0, 0, 1 )
+spread = 25.0
+gravity = Vector3( 0, 0, -9.8 )
+initial_velocity = 4.0
+initial_velocity_random = 0.5
+scale_amount_random = 0.89
+scale_amount_curve = SubResource( 9 )
+color_ramp = SubResource( 10 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.15
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

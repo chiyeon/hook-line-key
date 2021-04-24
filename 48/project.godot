@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Object",
+"class": "Fish",
+"language": "GDScript",
+"path": "res://logic/Fish.gd"
+} ]
+_global_script_class_icons={
+"Fish": ""
+}
+
 [application]
 
 config/name="48"

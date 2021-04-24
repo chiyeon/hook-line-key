@@ -1,0 +1,126 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://textures/particles/circle.png" type="Texture" id=1]
+[ext_resource path="res://logic/FishHint.gd" type="Script" id=2]
+
+[sub_resource type="SpatialMaterial" id=2]
+render_priority = 1
+flags_transparent = true
+flags_unshaded = true
+flags_do_not_receive_shadows = true
+flags_disable_ambient_light = true
+vertex_color_use_as_albedo = true
+params_specular_mode = 4
+
+[sub_resource type="SphereMesh" id=3]
+material = SubResource( 2 )
+radius = 0.2
+height = 0.4
+
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0, 0.104603, 0.225941 )
+colors = PoolColorArray( 0.662745, 0.866667, 1, 0, 0.953125, 0.982422, 1, 1, 0.558594, 0.741364, 1, 0 )
+
+[sub_resource type="Gradient" id=9]
+offsets = PoolRealArray( 0, 0.104603, 0.225941 )
+colors = PoolColorArray( 0.396078, 0.85098, 0.145098, 0, 0.527039, 1, 0.261719, 1, 0.52549, 1, 0.262745, 0 )
+
+[sub_resource type="Gradient" id=10]
+offsets = PoolRealArray( 0.0041841, 0.129707, 0.225941 )
+colors = PoolColorArray( 1, 0.881836, 0, 0, 1, 0.721569, 0.164706, 1, 1, 0.834961, 0, 0 )
+
+[sub_resource type="SpatialMaterial" id=5]
+render_priority = 1
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+params_blend_mode = 1
+albedo_texture = ExtResource( 1 )
+
+[sub_resource type="QuadMesh" id=6]
+material = SubResource( 5 )
+
+[sub_resource type="Curve" id=7]
+_data = [ Vector2( 0, 0 ), 0.0, 3.09424, 0, 0, Vector2( 1, 1 ), 0.0967616, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=8]
+offsets = PoolRealArray( 0, 0.443515, 0.861925 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.378906, 0.378906, 0.378906, 1, 0, 0, 0, 1 )
+
+[node name="FishHint" type="Position3D"]
+script = ExtResource( 2 )
+
+[node name="bubbles_normal" type="CPUParticles" parent="."]
+process_priority = 2
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0328757, 0 )
+visible = false
+cast_shadow = 0
+emitting = false
+amount = 6
+lifetime = 2.5
+one_shot = true
+randomness = 0.5
+lifetime_randomness = 0.3
+mesh = SubResource( 3 )
+direction = Vector3( 0, 1, 0 )
+spread = 5.0
+gravity = Vector3( 0, -9, 0 )
+initial_velocity = 2.0
+scale_amount = 0.1
+scale_amount_random = 0.67
+color_ramp = SubResource( 4 )
+
+[node name="bubbles_rare" type="CPUParticles" parent="."]
+process_priority = 2
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0328757, 0 )
+visible = false
+cast_shadow = 0
+emitting = false
+amount = 4
+lifetime = 2.5
+one_shot = true
+randomness = 0.5
+lifetime_randomness = 0.3
+mesh = SubResource( 3 )
+direction = Vector3( 0, 1, 0 )
+spread = 5.0
+gravity = Vector3( 0, -9, 0 )
+initial_velocity = 2.0
+scale_amount = 0.2
+scale_amount_random = 0.67
+color_ramp = SubResource( 9 )
+
+[node name="bubbles_mythical" type="CPUParticles" parent="."]
+process_priority = 2
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0328757, 0 )
+visible = false
+cast_shadow = 0
+emitting = false
+amount = 4
+lifetime = 2.5
+one_shot = true
+randomness = 0.5
+lifetime_randomness = 0.3
+mesh = SubResource( 3 )
+direction = Vector3( 0, 1, 0 )
+spread = 5.0
+gravity = Vector3( 0, -9, 0 )
+initial_velocity = 2.0
+scale_amount = 0.5
+scale_amount_random = 0.67
+color_ramp = SubResource( 10 )
+
+[node name="splashes" type="CPUParticles" parent="."]
+process_priority = 2
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.0287646, 0 )
+emitting = false
+amount = 2
+lifetime = 3.0
+one_shot = true
+mesh = SubResource( 6 )
+direction = Vector3( 0, 1, 0 )
+gravity = Vector3( 0, 0, 0 )
+scale_amount = 3.0
+scale_amount_random = 0.4
+scale_amount_curve = SubResource( 7 )
+color_ramp = SubResource( 8 )
