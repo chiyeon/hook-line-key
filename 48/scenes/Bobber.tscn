@@ -1,0 +1,66 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://models/bobber.fbx" type="PackedScene" id=1]
+[ext_resource path="res://textures/particles/circle.png" type="Texture" id=2]
+[ext_resource path="res://logic/bobber.gd" type="Script" id=3]
+[ext_resource path="res://textures/particles/circle_thick.png" type="Texture" id=4]
+
+[sub_resource type="SpatialMaterial" id=10]
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+params_blend_mode = 1
+albedo_texture = ExtResource( 4 )
+
+[sub_resource type="QuadMesh" id=11]
+material = SubResource( 10 )
+
+[sub_resource type="Curve" id=8]
+_data = [ Vector2( 0, 0 ), 0.0, 3.09424, 0, 0, Vector2( 1, 1 ), 0.0967616, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=9]
+offsets = PoolRealArray( 0, 0.456067, 0.803347 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.714844, 0.714844, 0.714844, 1, 0, 0, 0, 1 )
+
+[sub_resource type="SpatialMaterial" id=6]
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+params_diffuse_mode = 1
+params_blend_mode = 1
+albedo_texture = ExtResource( 2 )
+
+[sub_resource type="QuadMesh" id=7]
+material = SubResource( 6 )
+
+[node name="Bobber" type="Position3D"]
+
+[node name="bobber" parent="." instance=ExtResource( 1 )]
+script = ExtResource( 3 )
+
+[node name="splashes" type="CPUParticles" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.0105164, 0 )
+amount = 2
+lifetime = 4.0
+randomness = 0.37
+lifetime_randomness = 0.11
+mesh = SubResource( 11 )
+direction = Vector3( 0, 1, 0 )
+gravity = Vector3( 0, 0, 0 )
+scale_amount_random = 0.4
+scale_amount_curve = SubResource( 8 )
+color_ramp = SubResource( 9 )
+
+[node name="impact_splash" type="CPUParticles" parent="."]
+transform = Transform( 1, 0, 0, 0, -1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0.029, 0 )
+emitting = false
+amount = 1
+lifetime = 5.0
+one_shot = true
+mesh = SubResource( 7 )
+direction = Vector3( 0, 1, 0 )
+gravity = Vector3( 0, 0, 0 )
+scale_amount = 2.0
+scale_amount_random = 0.4
+scale_amount_curve = SubResource( 8 )
+color_ramp = SubResource( 9 )
