@@ -143,4 +143,3 @@ color_ramp = SubResource( 8 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.28892, 0, 3.22577 )
 
 [connection signal="timeout" from="boat/hint-timer" to="boat" method="_on_hinttimer_timeout"]
-[connection signal="timeout" from="boat/catch-timer" to="boat" method="CatchFish"]
