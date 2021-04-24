@@ -118,7 +118,7 @@ func _process(delta):
 			isInMinigame = true;
 			minigamePanel.visible = true;
 			print("started catching minigame click!");
-		elif Input.is_action_just_pressed("Throw") and hasThrownLine and isBobberLocked and !isCatchingFish and !bobberNearActiveFish: # reel in
+		elif Input.is_action_just_pressed("Throw") and hasThrownLine and isBobberLocked and !isCatchingFish: # reel in
 			CatchLine();
 
 		if Input.is_action_just_pressed("Reel"):
@@ -290,8 +290,6 @@ func BiteLine():
 	isCatchingFish = true;
 
 func CatchFish():
-	# remove from active fishes array
-	RemoveFish(fishNearBobberID);
 	print("caught fish!");
 
 	# reel in line
@@ -299,8 +297,10 @@ func CatchFish():
 
 	# show results screen
 	Global.isInputPaused = true;
-	var item = Item.new("Ooga booga", "oogiest of boogiests");
-	resultsPanel.ShowItem(item);
+	resultsPanel.ShowItem(activeFishes[fishNearBobberID].GetRandomCatch());
+
+	# remove from active fishes array
+	RemoveFish(fishNearBobberID);
 
 	# check end game conditions
 	if(activeFishes.size() == 0):

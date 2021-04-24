@@ -15,7 +15,7 @@ func _on_Button_pressed():
 	HideScreen();
 
 func ShowItem(item):
-	#itemIcon = item.icon;
+	itemIcon.texture = item.icon;
 	itemName.text = item.name;
 	itemDescription.text = item.description;
 	ShowScreen();

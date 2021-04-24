@@ -21,7 +21,7 @@ albedo_color = Color( 0.6, 0.890196, 0.917647, 1 )
 
 [sub_resource type="Environment" id=4]
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=5]
 resource_name = "Cast"
 length = 2.0
 tracks/0/type = "value"
@@ -51,7 +51,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="SpatialMaterial" id=5]
+[sub_resource type="SpatialMaterial" id=6]
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
@@ -59,13 +59,13 @@ params_diffuse_mode = 1
 params_blend_mode = 1
 albedo_texture = ExtResource( 1 )
 
-[sub_resource type="QuadMesh" id=6]
-material = SubResource( 5 )
+[sub_resource type="QuadMesh" id=7]
+material = SubResource( 6 )
 
-[sub_resource type="Curve" id=7]
+[sub_resource type="Curve" id=8]
 _data = [ Vector2( 0, 0 ), 0.0, 3.09424, 0, 0, Vector2( 1, 1 ), 0.0967616, 0.0, 0, 0 ]
 
-[sub_resource type="Gradient" id=8]
+[sub_resource type="Gradient" id=9]
 offsets = PoolRealArray( 0, 0.456067, 0.803347 )
 colors = PoolColorArray( 0, 0, 0, 1, 0.136719, 0.136719, 0.136719, 1, 0, 0, 0, 1 )
 
@@ -75,39 +75,39 @@ light_mode = 1
 [sub_resource type="StyleBoxFlat" id=11]
 bg_color = Color( 0.109804, 0.243137, 0.34902, 0.588235 )
 
-[sub_resource type="StyleBoxFlat" id=13]
+[sub_resource type="StyleBoxFlat" id=12]
 bg_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=14]
+[sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0.172549, 0.172549, 0.172549, 1 )
 
-[sub_resource type="DynamicFontData" id=16]
+[sub_resource type="DynamicFontData" id=14]
 antialiased = false
 font_path = "res://fonts/Helvetica.ttf"
 
 [sub_resource type="DynamicFont" id=15]
 size = 18
 use_mipmaps = true
-font_data = SubResource( 16 )
+font_data = SubResource( 14 )
 
-[sub_resource type="DynamicFont" id=17]
+[sub_resource type="DynamicFont" id=16]
 size = 12
 use_mipmaps = true
-font_data = SubResource( 16 )
+font_data = SubResource( 14 )
 
-[sub_resource type="StyleBoxFlat" id=18]
+[sub_resource type="StyleBoxFlat" id=17]
 bg_color = Color( 0.395567, 0.550781, 0.333481, 1 )
 
-[sub_resource type="StyleBoxFlat" id=19]
+[sub_resource type="StyleBoxFlat" id=18]
 bg_color = Color( 0.29686, 0.410156, 0.251541, 1 )
 
-[sub_resource type="StyleBoxFlat" id=21]
+[sub_resource type="StyleBoxFlat" id=19]
 bg_color = Color( 0.526913, 0.761719, 0.431442, 1 )
 
-[sub_resource type="DynamicFont" id=22]
+[sub_resource type="DynamicFont" id=20]
 size = 12
 use_mipmaps = true
-font_data = SubResource( 16 )
+font_data = SubResource( 14 )
 
 [node name="World" type="Spatial"]
 
@@ -156,7 +156,7 @@ transform = Transform( 0.35, 0, 0, 0, 0.182703, -0.298529, 0, 0.298529, 0.182703
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.0288565, -2.23365 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="boat/boat-model/model"]
-anims/Cast = SubResource( 9 )
+anims/Cast = SubResource( 5 )
 
 [node name="boat-hull" parent="boat/boat-model" instance=ExtResource( 5 )]
 transform = Transform( 0.99, 0, 0, 0, 0.99, 0, 0, 0, 0.99, 0, 0, 0 )
@@ -173,13 +173,13 @@ transform = Transform( 4, 0, 0, 0, -1.74846e-07, 4, 0, -4, -1.74846e-07, 0, 0.00
 amount = 2
 lifetime = 8.0
 randomness = 0.37
-mesh = SubResource( 6 )
+mesh = SubResource( 7 )
 direction = Vector3( 0, 1, 0 )
 gravity = Vector3( 0, 0, 0 )
 scale_amount = 2.0
 scale_amount_random = 0.49
-scale_amount_curve = SubResource( 7 )
-color_ramp = SubResource( 8 )
+scale_amount_curve = SubResource( 8 )
+color_ramp = SubResource( 9 )
 
 [node name="minigame" type="Control" parent="boat"]
 visible = false
@@ -244,7 +244,7 @@ __meta__ = {
 visible = false
 margin_right = 24.0
 margin_bottom = 2.0
-custom_styles/panel = SubResource( 13 )
+custom_styles/panel = SubResource( 12 )
 
 [node name="result" type="Panel" parent="boat"]
 visible = false
@@ -256,7 +256,7 @@ margin_left = -98.0
 margin_top = -64.0
 margin_right = 98.0
 margin_bottom = 64.0
-custom_styles/panel = SubResource( 14 )
+custom_styles/panel = SubResource( 13 )
 script = ExtResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -311,7 +311,7 @@ margin_top = 94.5
 margin_right = -34.0
 margin_bottom = 105.892
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 17 )
+custom_fonts/font = SubResource( 16 )
 text = "a fish that reeks of something unfishly"
 align = 1
 autowrap = true
@@ -328,10 +328,10 @@ margin_left = -15.5
 margin_top = 2.70421
 margin_right = 15.5
 margin_bottom = 22.7042
-custom_styles/hover = SubResource( 18 )
-custom_styles/pressed = SubResource( 19 )
-custom_styles/normal = SubResource( 21 )
-custom_fonts/font = SubResource( 22 )
+custom_styles/hover = SubResource( 17 )
+custom_styles/pressed = SubResource( 18 )
+custom_styles/normal = SubResource( 19 )
+custom_fonts/font = SubResource( 20 )
 shortcut_in_tooltip = false
 text = "OK"
 __meta__ = {
