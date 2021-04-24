@@ -30,8 +30,17 @@ var isBobberLocked = false;			# whether or not depth is static
 
 var hasThrownLine = false;
 var lineDistance = 0;					# length of fishing line. becomes static once bobber is locked
-var lineDropSpeed = 2;
-var maxDepth = 10;
+var lineDropSpeed = 6;
+var maxDepth = 50;
+
+# depth gage stuff
+var depthGageMapScale = 3;
+onready var depthGagePanel: Panel = $"depth-gage-master/depth-gage-panel";
+onready var depthGageHookIndicator: Panel = $"depth-gage-master/depth-gage-panel/hook";
+# list of all depth gage hints to destroy later
+var depthGageHints = {};
+
+onready var DepthGageHint = preload("res://scenes/DepthGageHint.tscn");
 
 # minigame stuff
 onready var minigamePanel: Control = $"minigame";
@@ -51,7 +60,10 @@ func _ready():
 	clickCounter = clickGoal * clickStartPercentage;
 	
 	# tempoary assign
-	AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-1, -10), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-1, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	AddFish(FishRarity.RARE, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-1, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	AddFish(FishRarity.MYTHICAL, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-1, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+
 
 func _physics_process(delta):
 	# if line isn't thrown, rotate model around to face cursor
@@ -115,6 +127,7 @@ func _process(delta):
 				else:
 					lineDistance = maxDepth;
 					LockBobber();
+				depthGageHookIndicator.rect_position.y = lineDistance * depthGageMapScale;
 			
 			# visually move bobber to water
 			bobberInstance.global_transform.origin = bobberInstance.global_transform.origin.linear_interpolate(bobberInstancePosition, 0.1);
@@ -141,6 +154,9 @@ func ThrowLine():
 	
 	# throw line
 	hasThrownLine = true;
+
+	# show indicator on depth gage
+	depthGageHookIndicator.visible = true;
 	print("threw line!");
 
 func CatchLine():
@@ -158,7 +174,7 @@ func CatchLine():
 		isCatchingFish = false;
 
 		# click count
-		clickCounter = clickGoal/2;
+		clickCounter = clickGoal * clickStartPercentage;
 		numClicks = 0;
 
 		# no minigame
@@ -166,6 +182,9 @@ func CatchLine():
 
 		# reveal bobber
 		bobberInstance.ShowBobber();
+
+		# hide indicator for depth gage where hook is
+		depthGageHookIndicator.visible = false;
 
 		# catch, delete bobber
 		hasThrownLine = false;
@@ -194,45 +213,63 @@ func AddFish(rarity, location):
 	
 	match(rarity):
 		FishRarity.COMMON:
-			hintTimer.wait_time = 10;
+			hintTimer.wait_time = 6 + rng.randi_range(-2, 2);
 			fishHintInstance.get_child(0).visible = true;
 		FishRarity.RARE:
-			hintTimer.wait_time = 15;
+			hintTimer.wait_time = 10 + rng.randi_range(-3, 3);
 			fishHintInstance.get_child(1).visible = true;
 		FishRarity.MYTHICAL:
-			hintTimer.wait_time = 20;
+			hintTimer.wait_time = 15 + rng.randi_range(-5, 5);
 			fishHintInstance.get_child(2).visible = true;
 	
 	add_child(hintTimer);
 	hintTimer.start();
 	
 	var newFish = Fish.new(rarity, location);
-
+	
 	# add new fish object to list
 	activeFishes.append(newFish);
+	
+	# get ID for caching dictionaries
+	var newFishID = activeFishes.find(newFish, 0);
 
 	# add hint timer to dictionary (to reference outside)
-	hintTimers[activeFishes.find(newFish, 0)] = hintTimer;
+	hintTimers[newFish] = hintTimer;
+
+	# instance a depth gage hint
+	var depthGageHint = DepthGageHint.instance();
+	# set size for ? indicator
+	depthGageHint.rect_size.y = fishBobberMaxRangeHeight * depthGageMapScale;
+
+	# show height hint
+	depthGageHint.rect_position.y = -location.y * depthGageMapScale - fishBobberMaxRangeHeight * depthGageMapScale * 0.5;
+	depthGagePanel.add_child(depthGageHint);
+
+	depthGageHints[newFish] = depthGageHint;
 	
 	print("Created fish of ", FishRarity.keys()[rarity], " Rarity at ", location);
 
 func RemoveFish(fishID):
+	print(hintTimers, " ", fishID);
+	hintTimers.get(activeFishes[fishID]).queue_free();
+	depthGageHints.get(activeFishes[fishID]).queue_free();
 	activeFishes.remove(fishID);
-	hintTimers.get(fishID).queue_free();
 
 func CheckBobberCloseToFish(point):
 	if(bobberNearActiveFish):
 		return;
 	for fish in activeFishes:
 		var adjustedFishLocation = Vector3(fish.location.x, 0, fish.location.z);
-		var dist = point.distance_to(adjustedFishLocation);
+		var xzDist = point.distance_to(adjustedFishLocation);
+		var yDist = abs((-lineDistance) - fish.location.y);
+		print(yDist);
 
 		# if is close enough inc height
-		if(dist < fishBobberMaxRange and fish.location.y + lineDistance < fishBobberMaxRangeHeight):
+		if(xzDist < fishBobberMaxRange and yDist < fishBobberMaxRangeHeight):
 			# set vars
 			bobberNearActiveFish = true;
 			fishNearBobberID = activeFishes.find(fish, 0);
-			print("near (", dist ,") a fish ID of ", fishNearBobberID);
+			print("near (xz: ", xzDist ,"), (y: ", yDist, ") a fish ID of ", fishNearBobberID);
 
 			# set timer
 			catchTimer.wait_time = rng.randf_range(1.5, 3) * (fish.rarity + 1);

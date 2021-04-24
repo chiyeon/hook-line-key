@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://textures/particles/circle.png" type="Texture" id=1]
 [ext_resource path="res://models/boat.fbx" type="PackedScene" id=2]
@@ -69,6 +69,18 @@ colors = PoolColorArray( 0, 0, 0, 1, 0.136719, 0.136719, 0.136719, 1, 0, 0, 0, 1
 
 [sub_resource type="CanvasItemMaterial" id=10]
 light_mode = 1
+
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 0.109804, 0.243137, 0.34902, 0.588235 )
+
+[sub_resource type="StyleBoxFlat" id=13]
+bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=14]
+bg_color = Color( 0.172549, 0.172549, 0.172549, 1 )
+
+[sub_resource type="DynamicFont" id=15]
+size = 4
 
 [node name="World" type="Spatial"]
 
@@ -156,10 +168,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -146.237
-margin_top = -60.0
-margin_right = -114.237
-margin_bottom = 90.0
+margin_left = 115.98
+margin_top = -73.773
+margin_right = 147.98
+margin_bottom = 76.227
 rect_pivot_offset = Vector2( 16, 75 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -179,6 +191,78 @@ rect_pivot_offset = Vector2( 70, 12 )
 max_value = 50.0
 value = 32.9
 percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="depth-gage-master" type="Control" parent="boat"]
+margin_right = 32.0
+margin_bottom = 240.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="depth-gage-panel" type="Panel" parent="boat/depth-gage-master"]
+margin_left = 4.0
+margin_top = 40.0
+margin_right = 28.0
+margin_bottom = 200.0
+rect_pivot_offset = Vector2( 16, 80 )
+custom_styles/panel = SubResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="hook" type="Panel" parent="boat/depth-gage-master/depth-gage-panel"]
+visible = false
+margin_right = 24.0
+margin_bottom = 2.0
+custom_styles/panel = SubResource( 13 )
+
+[node name="result" type="Panel" parent="boat"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -64.0
+margin_top = -36.0
+margin_right = 64.0
+margin_bottom = 36.0
+custom_styles/panel = SubResource( 14 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="title" type="Label" parent="boat/result"]
+anchor_right = 1.0
+anchor_bottom = 0.161
+margin_bottom = 2.408
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 15 )
+text = "success!"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="item-name" type="Label" parent="boat/result"]
+anchor_right = 1.0
+anchor_bottom = 0.161
+margin_top = 22.8492
+margin_bottom = 25.2572
+text = "success!"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="item-description" type="Label" parent="boat/result"]
+anchor_right = 1.0
+anchor_bottom = 0.161
+margin_top = 38.5814
+margin_bottom = 40.9894
+text = "success!"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Fish",
 "language": "GDScript",
 "path": "res://logic/Fish.gd"
+}, {
+"base": "Object",
+"class": "Item",
+"language": "GDScript",
+"path": "res://logic/Item.gd"
 } ]
 _global_script_class_icons={
-"Fish": ""
+"Fish": "",
+"Item": ""
 }
 
 [application]
