@@ -53,12 +53,13 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="CylinderMesh" id=21]
+[sub_resource type="CylinderMesh" id=6]
 top_radius = 0.05
 bottom_radius = 0.05
 height = 15.0
 
-[sub_resource type="SpatialMaterial" id=6]
+[sub_resource type="SpatialMaterial" id=7]
+render_priority = 1
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
@@ -66,64 +67,64 @@ params_diffuse_mode = 1
 params_blend_mode = 1
 albedo_texture = ExtResource( 1 )
 
-[sub_resource type="QuadMesh" id=7]
-material = SubResource( 6 )
+[sub_resource type="QuadMesh" id=8]
+material = SubResource( 7 )
 
-[sub_resource type="Curve" id=8]
+[sub_resource type="Curve" id=9]
 _data = [ Vector2( 0, 0 ), 0.0, 3.09424, 0, 0, Vector2( 1, 1 ), 0.0967616, 0.0, 0, 0 ]
 
-[sub_resource type="Gradient" id=9]
+[sub_resource type="Gradient" id=10]
 offsets = PoolRealArray( 0, 0.456067, 0.803347 )
 colors = PoolColorArray( 0, 0, 0, 1, 0.136719, 0.136719, 0.136719, 1, 0, 0, 0, 1 )
 
-[sub_resource type="SpatialMaterial" id=24]
+[sub_resource type="SpatialMaterial" id=11]
 render_priority = 2
 flags_transparent = true
 flags_unshaded = true
 albedo_texture = ExtResource( 10 )
 
-[sub_resource type="QuadMesh" id=23]
-material = SubResource( 24 )
+[sub_resource type="QuadMesh" id=12]
+material = SubResource( 11 )
 
-[sub_resource type="CanvasItemMaterial" id=10]
+[sub_resource type="CanvasItemMaterial" id=13]
 light_mode = 1
 
-[sub_resource type="StyleBoxFlat" id=11]
+[sub_resource type="StyleBoxFlat" id=14]
 bg_color = Color( 0.109804, 0.243137, 0.34902, 0.588235 )
 
-[sub_resource type="StyleBoxFlat" id=12]
+[sub_resource type="StyleBoxFlat" id=15]
 bg_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=13]
+[sub_resource type="StyleBoxFlat" id=16]
 bg_color = Color( 0.172549, 0.172549, 0.172549, 1 )
 
-[sub_resource type="DynamicFontData" id=14]
+[sub_resource type="DynamicFontData" id=17]
 antialiased = false
 font_path = "res://fonts/Helvetica.ttf"
 
-[sub_resource type="DynamicFont" id=15]
+[sub_resource type="DynamicFont" id=18]
 size = 18
 use_mipmaps = true
-font_data = SubResource( 14 )
+font_data = SubResource( 17 )
 
-[sub_resource type="DynamicFont" id=16]
+[sub_resource type="DynamicFont" id=19]
 size = 12
 use_mipmaps = true
-font_data = SubResource( 14 )
+font_data = SubResource( 17 )
 
-[sub_resource type="StyleBoxFlat" id=17]
+[sub_resource type="StyleBoxFlat" id=20]
 bg_color = Color( 0.395567, 0.550781, 0.333481, 1 )
 
-[sub_resource type="StyleBoxFlat" id=18]
+[sub_resource type="StyleBoxFlat" id=21]
 bg_color = Color( 0.29686, 0.410156, 0.251541, 1 )
 
-[sub_resource type="StyleBoxFlat" id=19]
+[sub_resource type="StyleBoxFlat" id=22]
 bg_color = Color( 0.526913, 0.761719, 0.431442, 1 )
 
-[sub_resource type="DynamicFont" id=20]
+[sub_resource type="DynamicFont" id=23]
 size = 12
 use_mipmaps = true
-font_data = SubResource( 14 )
+font_data = SubResource( 17 )
 
 [node name="World" type="Spatial"]
 
@@ -186,7 +187,7 @@ cast_to = Vector3( 0, -100, 0 )
 [node name="MeshInstance" type="MeshInstance" parent="boat/boat-model/model/RayCast"]
 transform = Transform( 1, 0.000671927, -0.000280769, -0.000671926, 1, 3.27826e-07, 0.000280769, 2.98023e-08, 1, -0.00511156, -7.63341, -0.0624619 )
 visible = false
-mesh = SubResource( 21 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="boat-hull" parent="boat/boat-model" instance=ExtResource( 5 )]
@@ -204,19 +205,19 @@ transform = Transform( 4, 0, 0, 0, -1.74846e-07, 4, 0, -4, -1.74846e-07, 0, 0.00
 amount = 2
 lifetime = 8.0
 randomness = 0.37
-mesh = SubResource( 7 )
+mesh = SubResource( 8 )
 direction = Vector3( 0, 1, 0 )
 gravity = Vector3( 0, 0, 0 )
 scale_amount = 2.0
 scale_amount_random = 0.49
-scale_amount_curve = SubResource( 8 )
-color_ramp = SubResource( 9 )
+scale_amount_curve = SubResource( 9 )
+color_ramp = SubResource( 10 )
 
 [node name="bobber-indicator" type="MeshInstance" parent="boat"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.322656, -4.90641 )
 visible = false
 cast_shadow = 0
-mesh = SubResource( 23 )
+mesh = SubResource( 12 )
 material/0 = null
 
 [node name="minigame" type="Control" parent="boat"]
@@ -228,7 +229,7 @@ __meta__ = {
 }
 
 [node name="progress-panel" type="Panel" parent="boat/minigame"]
-material = SubResource( 10 )
+material = SubResource( 13 )
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -273,7 +274,7 @@ margin_top = 40.0
 margin_right = 28.0
 margin_bottom = 200.0
 rect_pivot_offset = Vector2( 16, 80 )
-custom_styles/panel = SubResource( 11 )
+custom_styles/panel = SubResource( 14 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -282,7 +283,7 @@ __meta__ = {
 visible = false
 margin_right = 24.0
 margin_bottom = 2.0
-custom_styles/panel = SubResource( 12 )
+custom_styles/panel = SubResource( 15 )
 
 [node name="result" type="Panel" parent="boat"]
 visible = false
@@ -294,7 +295,7 @@ margin_left = -98.0
 margin_top = -64.0
 margin_right = 98.0
 margin_bottom = 64.0
-custom_styles/panel = SubResource( 13 )
+custom_styles/panel = SubResource( 16 )
 script = ExtResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -305,7 +306,7 @@ anchor_right = 1.0
 anchor_bottom = 0.161
 margin_bottom = 2.408
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 15 )
+custom_fonts/font = SubResource( 18 )
 text = "success!"
 align = 1
 valign = 1
@@ -334,7 +335,7 @@ anchor_bottom = 0.161
 margin_top = 71.0
 margin_bottom = 73.408
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 15 )
+custom_fonts/font = SubResource( 18 )
 text = "a stinky fish"
 align = 1
 __meta__ = {
@@ -349,7 +350,7 @@ margin_top = 94.5
 margin_right = -34.0
 margin_bottom = 105.892
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 16 )
+custom_fonts/font = SubResource( 19 )
 text = "a fish that reeks of something unfishly"
 align = 1
 autowrap = true
@@ -366,10 +367,10 @@ margin_left = -15.5
 margin_top = 2.70421
 margin_right = 15.5
 margin_bottom = 22.7042
-custom_styles/hover = SubResource( 17 )
-custom_styles/pressed = SubResource( 18 )
-custom_styles/normal = SubResource( 19 )
-custom_fonts/font = SubResource( 20 )
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 22 )
+custom_fonts/font = SubResource( 23 )
 shortcut_in_tooltip = false
 text = "OK"
 __meta__ = {
@@ -377,6 +378,7 @@ __meta__ = {
 }
 
 [node name="MouseFirstClick" type="TextureRect" parent="boat"]
+visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
