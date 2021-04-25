@@ -2,13 +2,13 @@ extends Spatial
 
 # references
 onready var model = $"boat-model/model"
-onready var rodTip = $"boat-model/model/fishing_rod/rod-tip"
+onready var rodTip = $"boat-model/model/fishing-rod/model/rod-tip"
 onready var animPlayer = $"boat-model/model/AnimationPlayer"
 
 # fish hint -> bubbles to show where fish is
 var fishHint = preload("res://scenes/FishHint.tscn");
 var activeFishes = [];						# list of all active fish hints
-var fishBobberMaxRange = 1;				# max range of a bobber being considered near a fish
+var fishBobberMaxRange = 2;				# max range of a bobber being considered near a fish
 var fishBobberMaxRangeHeight = 2;
 var bobberNearActiveFish = false;		# is bobber in radius of fish hint
 var fishNearBobberID: int;				# id of the fish that is near the bobber
@@ -21,6 +21,15 @@ var clickStartPercentage = 0.7;			# % of click goal where counter starts
 var numClicks = 0;							# used for alternating left/right click (using power)
 var hintTimers = {};
 var hints = {};
+var isHoldingMouse = false;
+var firstClickPosition;
+var firstRightClickPosition;
+var mouseDistance = 0;
+var isRodReturningToPosition = false;
+onready var fishingRod = $"boat-model/model/fishing-rod";
+onready var tipRaycast: RayCast = $"boat-model/model/RayCast";
+onready var mouseDragFirstIndicator = $"MouseFirstClick";
+onready var mouseDragMoveIndicator = $"MouseFirstClick/MouseDragIndicator";
 
 # bobber instance
 var bobber = preload("res://scenes/Bobber.tscn");
@@ -59,6 +68,7 @@ enum FishRarity {
 }
 
 func _ready():
+	set_process_unhandled_input(true)
 	rng.randomize();
 	clickIndicator.max_value = clickGoal;
 	clickCounter = clickGoal * clickStartPercentage;
@@ -69,15 +79,15 @@ func _ready():
 	AddFish(FishRarity.MYTHICAL, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 
 
-func _physics_process(delta):
+#func _physics_process(delta):
 	# if line isn't thrown, rotate model around to face cursor
-	if !hasThrownLine:
-		var offset = -PI * 1.75;
-		var screen_pos = get_viewport().get_camera().unproject_position(model.global_transform.origin)
-		var mouse_pos = get_viewport().get_mouse_position()
-		var angle = screen_pos.angle_to_point(mouse_pos)
+	#if !hasThrownLine and isHoldingMouse:
+		#var offset = -PI * 1.75;
+		#var screen_pos = get_viewport().get_camera().unproject_position(model.global_transform.origin)
+		#var mouse_pos = get_viewport().get_mouse_position()
+		#var angle = screen_pos.angle_to_point(mouse_pos)
 		#model.rotation.y = -angle + offset;
-		model.rotation.y = lerp_angle(model.rotation.y, -angle + offset, 0.15);
+		#model.rotation.y = lerp_angle(model.rotation.y, -angle + offset, 0.15);
 
 func _process(delta):
 
@@ -110,8 +120,49 @@ func _process(delta):
 	else:
 		if(Global.isInputPaused):
 			return;
-		if Input.is_action_just_pressed("Throw") and !hasThrownLine:	# click to throw line
-			animPlayer.play("Cast");
+
+		if(isRodReturningToPosition):
+			var targetRot = 0;
+			fishingRod.rotation.x = move_toward(fishingRod.rotation.x, targetRot, 0.25);
+
+			if(fishingRod.rotation.x == targetRot):
+				isRodReturningToPosition = false;
+				ThrowLine();
+
+		if Input.is_action_just_pressed("Reel"):
+			firstRightClickPosition = get_viewport().get_mouse_position();
+		if Input.is_action_pressed("Reel"):
+			var mousePos = get_viewport().get_mouse_position();
+
+			var d = mousePos - firstRightClickPosition;
+			firstRightClickPosition = mousePos;
+			self.rotate_y(d.x * 0.01);
+		
+		if Input.is_action_just_pressed("Throw") and !hasThrownLine and !isBobberLocked and !isHoldingMouse:
+			isHoldingMouse = true;
+			mouseDistance = 0;
+			firstClickPosition = get_viewport().get_mouse_position();
+
+			mouseDragFirstIndicator.visible = true;
+			mouseDragFirstIndicator.rect_position = firstClickPosition;
+		elif Input.is_action_just_released("Throw") and !hasThrownLine and !isBobberLocked and isHoldingMouse:
+			isHoldingMouse = false;
+			isRodReturningToPosition = true;
+
+			mouseDragFirstIndicator.visible = false;
+		if Input.is_action_pressed("Throw") and !hasThrownLine and !isBobberLocked and isHoldingMouse:	# click to throw line
+			#var screen_pos = get_viewport().get_camera().unproject_position(model.global_transform.origin)
+			var mousePos = get_viewport().get_mouse_position()
+			mouseDistance = firstClickPosition.distance_to(mousePos);
+
+			mouseDragMoveIndicator.rect_global_position = mousePos;
+
+			var angle = firstClickPosition.angle_to_point(mousePos)
+			var offset = -PI * 0.75;
+			var power = clamp(mouseDistance * 0.035, 0, PI * 0.5);
+			tipRaycast.rotation.x = deg2rad(10) + power / 2;
+			model.rotation.y = lerp_angle(model.rotation.y, -angle + offset - self.rotation.y, 0.15);
+			fishingRod.rotation.x = lerp_angle(fishingRod.rotation.x, power, 0.15);
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and !isBobberLocked:	# click to lock bobber
 			LockBobber();
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and isBobberLocked and isCatchingFish:	# if fish bit, click to catch
@@ -121,8 +172,8 @@ func _process(delta):
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and isBobberLocked and !isCatchingFish: # reel in
 			CatchLine();
 
-		if Input.is_action_just_pressed("Reel"):
-			CatchLine();
+		#if Input.is_action_just_pressed("Reel"):
+		#	CatchLine();
 		
 		# increase line distance after throwing, interpolate the bobber to the water spot
 		if(hasThrownLine):
@@ -136,27 +187,20 @@ func _process(delta):
 				depthGageHookIndicator.rect_position.y = lineDistance * depthGageMapScale;
 			
 			# visually move bobber to water
-			bobberInstance.global_transform.origin = bobberInstance.global_transform.origin.linear_interpolate(bobberInstancePosition, 0.1);
+			bobberInstance.transform.origin = bobberInstance.transform.origin.linear_interpolate(bobberInstancePosition, 0.1);
 
 func ThrowLine():
 	# reset line distance
 	lineDistance = 0;
 	
 	# determine where player is throwing line
-	var rayLength = 1000;
-	var mousePos = get_viewport().get_mouse_position();
-	var camera = get_viewport().get_camera();
-	var from = camera.project_ray_origin(mousePos);
-	var to = from + camera.project_ray_normal(mousePos) * rayLength;
-	
-	var spaceState = get_world().get_direct_space_state();
-	var mouseWorldPos = spaceState.intersect_ray(from, to).position;
-	bobberInstancePosition = Vector3(mouseWorldPos.x, 0, mouseWorldPos.z);
+	var colPoint = to_local(tipRaycast.get_collision_point());
+	bobberInstancePosition = Vector3(colPoint.x, 0.5, colPoint.z);
 	
 	# spawn bobber instance
 	bobberInstance = bobber.instance();
 	bobberInstance.global_transform.origin = rodTip.global_transform.origin;
-	get_tree().root.add_child(bobberInstance);
+	add_child(bobberInstance);
 	
 	# throw line
 	hasThrownLine = true;
