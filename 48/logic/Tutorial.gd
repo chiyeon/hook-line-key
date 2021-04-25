@@ -6,7 +6,7 @@ onready var caster = get_node("../boat");
 
 var Dialogue;
 var Messages = [
-	"Left click to advance dialogue",#0
+	"My keys must be at the bottom!",#0
 	"Right click n Drag to look around",#1
 	"Left click n Drag to aim, let go to cast",#2
 	"Left click again or wait to lock the hook in place",#3
@@ -24,11 +24,11 @@ var Messages = [
 	"The red bobber will dip below the water when a fish bites!",#15
 	"Left click when you see the bobber dip",#16
 	"Fish take no longer than 5 seconds to bite",#17
-	"If the bobber doesn't dip by then, wrong depth!",#18
+	"If the bobber doesn't dip by then, wrong depth! Now try",#18
 	"You just caught something!",
 	"Items are stored instantly. There are many to collect",
 	"You also upgraded your fishing rod!",
-	"Catching fish slowly upgrades it.",
+	"The top bar shows the fish needed for an upgrade",
 	"Each upgrade lets you go deeper and deeper.",
 	"Now go catch some fish!"
 ]
@@ -41,6 +41,8 @@ var waiting3 = false;
 func _ready():
 	if(!Global.tutorialMode):
 		queue_free();
+	
+	#caster.disableLeftClick = true;
 
 func _on_Timer_timeout(debug=false):
 	Dialogue = get_node("/root/World/DialoguePanel");
@@ -52,14 +54,19 @@ func _on_Timer_timeout(debug=false):
 	Dialogue.ShowDialogue(Messages[dialogueState], debug);
 
 	if(dialogueState == 1):
-		timer.wait_time = 3;
+		timer.wait_time = 3; 
 	if(dialogueState == 2):
 		timer.wait_time = 0.35;
 	if(dialogueState == 3):
+		caster.disableLeftClick = false;
 		timer.wait_time = 3;
 	if(dialogueState == 4):
+		caster.disableLeftClick = true;
 		timer.wait_time = 1;
+	if(dialogueState == 6):
+		caster.disableLeftClick = false;
 	if(dialogueState == 7):
+		caster.disableLeftClick = true;
 		timer.wait_time = 0.35;
 	if(dialogueState == 8):
 		timer.wait_time = 3;
@@ -73,11 +80,19 @@ func _on_Timer_timeout(debug=false):
 		timer.wait_time = 2;
 	if(dialogueState == 13):
 		timer.wait_time = 0.35;
+	if(dialogueState == 18):
+		caster.disableLeftClick = false;
 
 func _process(delta):
 
 	if Input.is_action_just_pressed("debug") and Global.debugMode:
 		_on_Timer_timeout(true);
+
+	if(dialogueState == 18):
+		if(!caster.tutorialFlip):
+			return;
+		else:
+			_on_Timer_timeout();
 
 	if Input.is_action_just_pressed("Throw") and timer.is_stopped() and !Dialogue.dialogueActive:
 		if(dialogueState == 3 || dialogueState == 6):
@@ -86,14 +101,6 @@ func _process(delta):
 				return;
 			else:
 				waiting = true;
-				return;
-		elif(dialogueState == 18):
-			if(!caster.tutorialFlip):
-				return;
-			if(waiting3):
-				waiting3 = false;
-			else:
-				waiting3 = true;
 				return;
 			
 		timer.start();

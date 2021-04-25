@@ -12,6 +12,7 @@ func ShowScreen():
 
 func _on_Button_pressed():
 	Global.isInputPaused = false;
+	get_node("/root/World/boat").tutorialFlip = true;
 	HideScreen();
 
 func ShowItem(item):

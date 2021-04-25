@@ -1,0 +1,5 @@
+--disable input until only certain parts
+--broken dialogue, show AFTER user presses accept
+-tell where upgrade bar is (at top)
+show rarity and show chance
+--increase chances of more than 1 fish spawning

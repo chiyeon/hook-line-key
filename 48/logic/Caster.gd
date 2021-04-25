@@ -28,6 +28,7 @@ var firstClickPosition;
 var firstRightClickPosition;
 var mouseDistance = 0;
 var isRodReturningToPosition = false;
+var disableLeftClick = false;
 onready var fishingRod = $"boat-model/model/fishing-rod";
 onready var tipRaycast: RayCast = $"boat-model/model/RayCast";
 onready var mouseDragFirstIndicator = $"MouseFirstClick";
@@ -159,9 +160,6 @@ func _process(delta):
 			isInMinigame = false;
 			CatchFish();
 	else:
-		if(Global.isInputPaused):
-			return;
-
 		if(isRodReturningToPosition):
 			var targetRot = 0;
 			fishingRod.rotation.x = move_toward(fishingRod.rotation.x, targetRot, 0.16);
@@ -179,6 +177,33 @@ func _process(delta):
 			firstRightClickPosition = mousePos;
 			self.rotate_y(d.x * 0.01);
 		
+			# increase line distance after throwing, interpolate the bobber to the water spot
+		if(hasThrownLine):
+			# draw fishing line
+			fishingLine.clear();
+			fishingLine.begin(Mesh.PRIMITIVE_LINE_LOOP);
+			fishingLine.add_vertex(rodTip.global_transform.origin);
+			fishingLine.add_vertex(bobberInstance.global_transform.origin);
+			fishingLine.end();
+
+			# make hook go deeper at specified rate until max if bobber ISNT locked
+			if(!isBobberLocked):
+				if(lineDistance < maxDepth):
+					lineDistance += delta * lineDropSpeed;
+				else:
+					lineDistance = maxDepth;
+					LockBobber();
+				depthGageHookIndicator.rect_position.y = 30 + (lineDistance) * depthGageMapScale;
+			
+			# visually move bobber to water
+			bobberInstance.transform.origin = bobberInstance.transform.origin.linear_interpolate(bobberInstancePosition, 0.1);
+
+		if(Global.isInputPaused):
+			return;
+
+		if(disableLeftClick):
+			return;
+
 		if Input.is_action_just_pressed("Throw") and !hasThrownLine and !isBobberLocked and !isHoldingMouse:
 			isHoldingMouse = true;
 			mouseDistance = 0;
@@ -222,27 +247,6 @@ func _process(delta):
 
 		#if Input.is_action_just_pressed("Reel"):
 		#	CatchLine();
-		
-		# increase line distance after throwing, interpolate the bobber to the water spot
-		if(hasThrownLine):
-			# draw fishing line
-			fishingLine.clear();
-			fishingLine.begin(Mesh.PRIMITIVE_LINE_LOOP);
-			fishingLine.add_vertex(rodTip.global_transform.origin);
-			fishingLine.add_vertex(bobberInstance.global_transform.origin);
-			fishingLine.end();
-
-			# make hook go deeper at specified rate until max if bobber ISNT locked
-			if(!isBobberLocked):
-				if(lineDistance < maxDepth):
-					lineDistance += delta * lineDropSpeed;
-				else:
-					lineDistance = maxDepth;
-					LockBobber();
-				depthGageHookIndicator.rect_position.y = 30 + (lineDistance) * depthGageMapScale;
-			
-			# visually move bobber to water
-			bobberInstance.transform.origin = bobberInstance.transform.origin.linear_interpolate(bobberInstancePosition, 0.1);
 
 func ThrowLine():
 	# reset line distance
@@ -443,9 +447,9 @@ func CatchFish():
 		for i in numFishesToSpawn:
 			var j = rng.randf();
 			var rarity = 0;
-			if(j > 0.75):
+			if(j > 0.80):
 				rarity = 2;
-			elif(j > 0.5):
+			elif(j > 0.45):
 				rarity = 1;
 			else:
 				rarity = 0;
@@ -471,8 +475,6 @@ func SetDepth(_depth):
 	fishableArea.rect_size.y = value;
 
 func UpgradeDepth():
-
-	tutorialFlip = true;
 
 	if(maxDepth >= 60):
 		# end game
