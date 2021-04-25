@@ -30,6 +30,7 @@ onready var fishingRod = $"boat-model/model/fishing-rod";
 onready var tipRaycast: RayCast = $"boat-model/model/RayCast";
 onready var mouseDragFirstIndicator = $"MouseFirstClick";
 onready var mouseDragMoveIndicator = $"MouseFirstClick/MouseDragIndicator";
+onready var bobberIndicator = $"bobber-indicator";
 
 # bobber instance
 var bobber = preload("res://scenes/Bobber.tscn");
@@ -142,12 +143,14 @@ func _process(delta):
 			isHoldingMouse = true;
 			mouseDistance = 0;
 			firstClickPosition = get_viewport().get_mouse_position();
+			bobberIndicator.visible = true;
 
 			mouseDragFirstIndicator.visible = true;
 			mouseDragFirstIndicator.rect_position = firstClickPosition;
 		elif Input.is_action_just_released("Throw") and !hasThrownLine and !isBobberLocked and isHoldingMouse:
 			isHoldingMouse = false;
 			isRodReturningToPosition = true;
+			bobberIndicator.visible = false;
 
 			mouseDragFirstIndicator.visible = false;
 		if Input.is_action_pressed("Throw") and !hasThrownLine and !isBobberLocked and isHoldingMouse:	# click to throw line
@@ -163,6 +166,10 @@ func _process(delta):
 			tipRaycast.rotation.x = deg2rad(10) + power / 2;
 			model.rotation.y = lerp_angle(model.rotation.y, -angle + offset - self.rotation.y, 0.15);
 			fishingRod.rotation.x = lerp_angle(fishingRod.rotation.x, power, 0.15);
+
+			var colPos = tipRaycast.get_collision_point();
+			bobberIndicator.global_transform.origin = Vector3(colPos.x, 0, colPos.z);
+
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and !isBobberLocked:	# click to lock bobber
 			LockBobber();
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and isBobberLocked and isCatchingFish:	# if fish bit, click to catch

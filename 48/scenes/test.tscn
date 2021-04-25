@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://textures/particles/circle.png" type="Texture" id=1]
 [ext_resource path="res://models/boat.fbx" type="PackedScene" id=2]
@@ -9,6 +9,8 @@
 [ext_resource path="res://scenes/FishHint.tscn" type="PackedScene" id=7]
 [ext_resource path="res://textures/items/stinky-fish.png" type="Texture" id=8]
 [ext_resource path="res://logic/ResultsScreen.gd" type="Script" id=9]
+[ext_resource path="res://textures/particles/circle_thick.png" type="Texture" id=10]
+[ext_resource path="res://textures/particles/circle_full.png" type="Texture" id=11]
 
 [sub_resource type="PlaneMesh" id=1]
 
@@ -74,6 +76,15 @@ _data = [ Vector2( 0, 0 ), 0.0, 3.09424, 0, 0, Vector2( 1, 1 ), 0.0967616, 0.0, 
 offsets = PoolRealArray( 0, 0.456067, 0.803347 )
 colors = PoolColorArray( 0, 0, 0, 1, 0.136719, 0.136719, 0.136719, 1, 0, 0, 0, 1 )
 
+[sub_resource type="SpatialMaterial" id=24]
+render_priority = 2
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 10 )
+
+[sub_resource type="QuadMesh" id=23]
+material = SubResource( 24 )
+
 [sub_resource type="CanvasItemMaterial" id=10]
 light_mode = 1
 
@@ -113,9 +124,6 @@ bg_color = Color( 0.526913, 0.761719, 0.431442, 1 )
 size = 12
 use_mipmaps = true
 font_data = SubResource( 14 )
-
-[sub_resource type="StyleBoxFlat" id=22]
-bg_color = Color( 1, 1, 1, 1 )
 
 [node name="World" type="Spatial"]
 
@@ -177,6 +185,7 @@ cast_to = Vector3( 0, -100, 0 )
 
 [node name="MeshInstance" type="MeshInstance" parent="boat/boat-model/model/RayCast"]
 transform = Transform( 1, 0.000671927, -0.000280769, -0.000671926, 1, 3.27826e-07, 0.000280769, 2.98023e-08, 1, -0.00511156, -7.63341, -0.0624619 )
+visible = false
 mesh = SubResource( 21 )
 material/0 = null
 
@@ -202,6 +211,13 @@ scale_amount = 2.0
 scale_amount_random = 0.49
 scale_amount_curve = SubResource( 8 )
 color_ramp = SubResource( 9 )
+
+[node name="bobber-indicator" type="MeshInstance" parent="boat"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.322656, -4.90641 )
+visible = false
+cast_shadow = 0
+mesh = SubResource( 23 )
+material/0 = null
 
 [node name="minigame" type="Control" parent="boat"]
 visible = false
@@ -360,21 +376,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MouseFirstClick" type="Panel" parent="boat"]
-visible = false
-margin_right = 8.0
-margin_bottom = 8.0
-custom_styles/panel = SubResource( 22 )
+[node name="MouseFirstClick" type="TextureRect" parent="boat"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -172.0
+margin_top = -132.0
+margin_right = -148.0
+margin_bottom = -108.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_pivot_offset = Vector2( 12, 12 )
+texture = ExtResource( 10 )
+expand = true
+stretch_mode = 1
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
-[node name="MouseDragIndicator" type="Panel" parent="boat/MouseFirstClick"]
-margin_right = 6.0
-margin_bottom = 6.0
-custom_styles/panel = SubResource( 22 )
+[node name="MouseDragIndicator" type="TextureRect" parent="boat/MouseFirstClick"]
+process_priority = 2
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -8.0
+margin_top = -8.0
+margin_right = 8.0
+margin_bottom = 8.0
+rect_pivot_offset = Vector2( 8, 8 )
+size_flags_horizontal = 5
+size_flags_vertical = 4
+texture = ExtResource( 11 )
+expand = true
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
 [node name="FishHint" parent="." instance=ExtResource( 7 )]
