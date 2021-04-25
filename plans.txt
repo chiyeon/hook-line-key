@@ -7,3 +7,5 @@
 goals: 
 - make fishing more satisfying -> no indicator where rod will go, must guess; pull back to build force in direction
 - collectable
+
+

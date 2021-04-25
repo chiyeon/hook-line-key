@@ -1,3 +1,5 @@
+# this may be the worst file i've ever written.
+
 extends Spatial
 
 # references
@@ -17,7 +19,7 @@ var isCatchingFish = false;				# if player is in act of reeling in;
 var isInMinigame = false;
 var clickCounter = 0;						# up every click, goes down based on rarity of fish
 var clickGoal = 30;							# note that starts at HALF of goal
-var clickStartPercentage = 0.7;			# % of click goal where counter starts
+var clickStartPercentage = 0.55;			# % of click goal where counter starts
 var numClicks = 0;							# used for alternating left/right click (using power)
 var hintTimers = {};
 var hints = {};
@@ -32,6 +34,9 @@ onready var mouseDragFirstIndicator = $"MouseFirstClick";
 onready var mouseDragMoveIndicator = $"MouseFirstClick/MouseDragIndicator";
 onready var bobberIndicator = $"bobber-indicator";
 
+onready var rightClickIndicator = $"minigame/right-click";
+onready var leftClickIndicator = $"minigame/left-click";
+
 # bobber instance
 var bobber = preload("res://scenes/Bobber.tscn");
 var bobberInstance;
@@ -42,7 +47,7 @@ var isBobberLocked = false;			# whether or not depth is static
 var hasThrownLine = false;
 var lineDistance = 0;					# length of fishing line. becomes static once bobber is locked
 var lineDropSpeed = 6;
-var maxDepth = 50;
+var maxDepth = 60;
 
 # depth gage stuff
 var depthGageMapScale = 3;
@@ -97,9 +102,19 @@ func _process(delta):
 		clickIndicator.value = clickCounter;
 		# decrement clickCounter based on rarity of fish
 		clickCounter -= delta * (activeFishes[fishNearBobberID].rarity + 3);
+
+		# shake camera depending on how close fish is
+		var camera = get_viewport().get_camera();
+		var shakeAmount = (1 - clickCounter/clickGoal) * 0.15;
+
+		camera.rotation_degrees.z = rand_range(-1, 1) * shakeAmount;
+		camera.h_offset = rand_range(-1, 1) * shakeAmount;
+		camera.v_offset = rand_range(-1, 1) * shakeAmount;
+
 		# cap at 0
 		if(clickCounter <= 0):
 			clickCounter = 0;
+			CatchLine();
 
 		# only alternating between right/left works
 		if(pow(-1, numClicks) == 1):
@@ -107,11 +122,15 @@ func _process(delta):
 				clickCounter += 1;
 				numClicks += 1;
 				print(clickGoal - clickCounter + 1, " left");
+				leftClickIndicator.rect_scale = Vector2(1, 1);
+				rightClickIndicator.rect_scale = Vector2(1.2, 1.2);
 		else:
 			if Input.is_action_just_pressed("Reel"):
 				clickCounter += 1;
 				numClicks += 1;
 				print(clickGoal - clickCounter + 1, " left");
+				leftClickIndicator.rect_scale = Vector2(1.2, 1.2);
+				rightClickIndicator.rect_scale = Vector2(1, 1);
 
 		# if we hit goal minigame over
 		if(clickCounter >= clickGoal):
@@ -124,7 +143,7 @@ func _process(delta):
 
 		if(isRodReturningToPosition):
 			var targetRot = 0;
-			fishingRod.rotation.x = move_toward(fishingRod.rotation.x, targetRot, 0.25);
+			fishingRod.rotation.x = move_toward(fishingRod.rotation.x, targetRot, 0.16);
 
 			if(fishingRod.rotation.x == targetRot):
 				isRodReturningToPosition = false;
@@ -236,6 +255,7 @@ func CatchLine():
 
 		# no minigame
 		isInMinigame = false;
+		minigamePanel.visible = false;
 
 		# reveal bobber
 		bobberInstance.ShowBobber();
@@ -339,6 +359,18 @@ func BiteLine():
 	print("Fish ", fishNearBobberID, " bit the line !");
 	bobberInstance.HideBobber();
 	isCatchingFish = true;
+	var timer = Timer.new();
+	timer.wait_time = 3;
+	add_child(timer);
+	timer.connect("timeout", self, "TryFailBite", [timer]);
+	timer.start();
+
+func TryFailBite(timer):
+	timer.queue_free();
+	if(isInMinigame):
+		return;
+	else:
+		CatchLine();
 
 func CatchFish():
 	print("caught fish!");
