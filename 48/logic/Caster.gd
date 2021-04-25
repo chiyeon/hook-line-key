@@ -47,7 +47,7 @@ var isBobberLocked = false;			# whether or not depth is static
 var hasThrownLine = false;
 var lineDistance = 0;					# length of fishing line. becomes static once bobber is locked
 var lineDropSpeed = 6;
-var maxDepth = 60;
+var maxDepth = 15;
 
 # depth gage stuff
 var depthGageMapScale = 3;
@@ -80,9 +80,9 @@ func _ready():
 	clickCounter = clickGoal * clickStartPercentage;
 	
 	# tempoary assign
-	AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
-	AddFish(FishRarity.RARE, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
-	AddFish(FishRarity.MYTHICAL, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	#AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	#AddFish(FishRarity.RARE, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	#AddFish(FishRarity.MYTHICAL, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 
 
 #func _physics_process(delta):
@@ -210,7 +210,7 @@ func _process(delta):
 				else:
 					lineDistance = maxDepth;
 					LockBobber();
-				depthGageHookIndicator.rect_position.y = lineDistance * depthGageMapScale;
+				depthGageHookIndicator.rect_position.y = (lineDistance + 1) * depthGageMapScale;
 			
 			# visually move bobber to water
 			bobberInstance.transform.origin = bobberInstance.transform.origin.linear_interpolate(bobberInstancePosition, 0.1);
@@ -317,7 +317,7 @@ func AddFish(rarity, location):
 	# instance a depth gage hint
 	var depthGageHint = DepthGageHint.instance();
 	# set size for ? indicator
-	depthGageHint.rect_size.y = fishBobberMaxRangeHeight * depthGageMapScale;
+	depthGageHint.rect_size.y = fishBobberMaxRangeHeight * depthGageMapScale * 2;
 
 	# show height hint
 	depthGageHint.rect_position.y = -location.y * depthGageMapScale - fishBobberMaxRangeHeight * depthGageMapScale * 0.5;

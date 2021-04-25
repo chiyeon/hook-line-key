@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://textures/particles/circle.png" type="Texture" id=1]
 [ext_resource path="res://models/boat.fbx" type="PackedScene" id=2]
@@ -94,6 +94,12 @@ bg_color = Color( 0.109804, 0.243137, 0.34902, 0.588235 )
 
 [sub_resource type="StyleBoxFlat" id=15]
 bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=29]
+bg_color = Color( 0.0941176, 0.180392, 0.247059, 0.823529 )
+
+[sub_resource type="StyleBoxFlat" id=28]
+bg_color = Color( 0.858824, 0.866667, 0.87451, 0.823529 )
 
 [sub_resource type="StyleBoxFlat" id=24]
 bg_color = Color( 0.270588, 0.270588, 0.270588, 0.470588 )
@@ -246,10 +252,10 @@ __meta__ = {
 [node name="depth-gage-panel" type="Panel" parent="boat/depth-gage-master"]
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_left = 3.5636
-margin_top = -90.0
-margin_right = 27.5636
-margin_bottom = 90.0
+margin_left = 3.74576
+margin_top = -100.0
+margin_right = 11.7458
+margin_bottom = 100.0
 rect_pivot_offset = Vector2( 16, 80 )
 custom_styles/panel = SubResource( 14 )
 __meta__ = {
@@ -258,9 +264,74 @@ __meta__ = {
 
 [node name="hook" type="Panel" parent="boat/depth-gage-master/depth-gage-panel"]
 visible = false
-margin_right = 24.0
+margin_right = 8.0
 margin_bottom = 2.0
 custom_styles/panel = SubResource( 15 )
+
+[node name="FishableAreaIndicator" type="Panel" parent="boat/depth-gage-master/depth-gage-panel"]
+margin_right = 8.0
+margin_bottom = 52.0
+custom_styles/panel = SubResource( 29 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YSort" type="YSort" parent="boat/depth-gage-master"]
+z_index = 2
+
+[node name="label6" type="Panel" parent="boat/depth-gage-master/YSort"]
+margin_left = 3.74576
+margin_top = 20.0
+margin_right = 11.7458
+margin_bottom = 22.0
+custom_styles/panel = SubResource( 28 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label2" type="Panel" parent="boat/depth-gage-master/YSort"]
+process_priority = 2
+margin_left = 3.74576
+margin_top = 220.0
+margin_right = 11.7458
+margin_bottom = 222.0
+custom_styles/panel = SubResource( 28 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label3" type="Panel" parent="boat/depth-gage-master/YSort"]
+process_priority = 2
+margin_left = 3.74576
+margin_top = 70.0
+margin_right = 11.7458
+margin_bottom = 72.0
+custom_styles/panel = SubResource( 28 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label4" type="Panel" parent="boat/depth-gage-master/YSort"]
+process_priority = 2
+margin_left = 3.74576
+margin_top = 120.0
+margin_right = 11.7458
+margin_bottom = 122.0
+custom_styles/panel = SubResource( 28 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label5" type="Panel" parent="boat/depth-gage-master/YSort"]
+process_priority = 2
+margin_left = 3.74576
+margin_top = 170.0
+margin_right = 11.7458
+margin_bottom = 172.0
+custom_styles/panel = SubResource( 28 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="minigame" type="Control" parent="boat"]
 visible = false
