@@ -7,7 +7,6 @@ var currentNumCatches: float = 0;
 var upgradeProgressBar = false;
 
 onready var tween = $"LevelProgress/Tween"
-
 onready var levelProgressBar = $"LevelProgress"
 
 var caster;
@@ -35,19 +34,13 @@ func FinishTween(object, key):
 		levelProgressBar.max_value = UpgradeThresholds[currentUpgradeThreshold];
 		# set bar back to 100% to animate tween downards
 		levelProgressBar.value = levelProgressBar.max_value;
-		# increase maxDepth
-		caster.maxDepth += 15;
 
 		# animating bar moving back
 		tween.interpolate_property(levelProgressBar, "value", levelProgressBar.value, currentNumCatches, 2, Tween.TRANS_SINE, Tween.EASE_OUT);
 		tween.start();
 
-		# animate depth gage increasing
-		IncreaseDepthGage();
-
-func IncreaseDepthGage():
-	caster.maxDepth += 15;
-	# aniamte
+		# increase depth
+		caster.UpgradeDepth();
 
 func AddCatch():
 	# add to catches

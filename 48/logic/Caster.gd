@@ -40,6 +40,9 @@ onready var fishingLine = $"../fishing-line";
 
 onready var levelManager = $"LevelManager";
 
+onready var fishableArea = $"depth-gage-master/depth-gage-panel/FishableAreaIndicator";
+onready var fishableAreaTween = $"depth-gage-master/depth-gage-panel/FishableAreaIndicator/Tween";
+
 # bobber instance
 var bobber = preload("res://scenes/Bobber.tscn");
 var bobberInstance;
@@ -445,3 +448,18 @@ func GetNewFishDepth():
 				height -= 2;
 
 	return height;
+
+func UpgradeDepth():
+
+	if(maxDepth >= 60):
+		# end game
+		pass;
+
+	print(maxDepth);
+	var c: float = (maxDepth + 15) / 60.0;
+	var value = c * 180 + 2;
+	print(c);
+	print(value);
+	fishableAreaTween.interpolate_property(fishableArea, "rect_size:y", fishableArea.rect_size.y, value, 1, Tween.TRANS_SINE, Tween.EASE_OUT);
+	fishableAreaTween.start();
+	maxDepth += 15;

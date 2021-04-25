@@ -286,14 +286,14 @@ __meta__ = {
 }
 
 [node name="FishableAreaIndicator" type="Panel" parent="boat/depth-gage-master/depth-gage-panel"]
-margin_left = -0.235962
-margin_top = 0.235977
-margin_right = 7.76404
-margin_bottom = 92.236
+margin_right = 8.0
+margin_bottom = 92.0
 custom_styles/panel = SubResource( 16 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Tween" type="Tween" parent="boat/depth-gage-master/depth-gage-panel/FishableAreaIndicator"]
 
 [node name="YSort" type="YSort" parent="boat/depth-gage-master"]
 z_index = 2
