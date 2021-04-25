@@ -73,6 +73,8 @@ onready var resultsPanel: Panel = $result;
 
 var rng = RandomNumberGenerator.new();
 
+var spawnFish = false;
+
 enum FishRarity {
 	COMMON,
 	RARE,
@@ -83,12 +85,12 @@ func _ready():
 	rng.randomize();
 	clickIndicator.max_value = clickGoal;
 	clickCounter = clickGoal * clickStartPercentage;
-
+	
 	# set up level manager (assign maxDepth)
 	levelManager.Setup(self);
 	
 	# tempoary assign
-	AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	#AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 	#AddFish(FishRarity.RARE, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 	#AddFish(FishRarity.MYTHICAL, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 

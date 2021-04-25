@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=2]
+[gd_scene load_steps=54 format=2]
 
 [ext_resource path="res://textures/particles/circle.png" type="Texture" id=1]
 [ext_resource path="res://models/boat.fbx" type="PackedScene" id=2]
@@ -15,6 +15,9 @@
 [ext_resource path="res://textures/ui/left_click.png" type="Texture" id=13]
 [ext_resource path="res://logic/ShakeCamera.gd" type="Script" id=14]
 [ext_resource path="res://logic/LevelManager.gd" type="Script" id=15]
+[ext_resource path="res://fonts/ButterFontData.tres" type="DynamicFontData" id=16]
+[ext_resource path="res://logic/Dialogue.gd" type="Script" id=17]
+[ext_resource path="res://logic/Tutorial.gd" type="Script" id=18]
 
 [sub_resource type="PlaneMesh" id=1]
 
@@ -112,7 +115,7 @@ bg_color = Color( 0.0941176, 0.180392, 0.247059, 0.823529 )
 bg_color = Color( 0.858824, 0.866667, 0.87451, 0.823529 )
 
 [sub_resource type="StyleBoxFlat" id=18]
-bg_color = Color( 1, 1, 1, 1 )
+bg_color = Color( 0.945098, 1, 0, 1 )
 
 [sub_resource type="StyleBoxFlat" id=19]
 bg_color = Color( 0.270588, 0.270588, 0.270588, 0.470588 )
@@ -159,6 +162,43 @@ bg_color = Color( 0.526913, 0.761719, 0.431442, 1 )
 size = 12
 use_mipmaps = true
 font_data = SubResource( 25 )
+
+[sub_resource type="StyleBoxFlat" id=32]
+bg_color = Color( 0.109804, 0.109804, 0.109804, 1 )
+
+[sub_resource type="DynamicFont" id=33]
+size = 18
+font_data = ExtResource( 16 )
+
+[sub_resource type="Animation" id=35]
+resource_name = "HideWindow"
+tracks/0/type = "value"
+tracks/0/path = NodePath("DialogueWindow:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 0.138696, 0.138696 ),
+"update": 0,
+"values": [ Vector2( 47.5, 18 ), Vector2( 47.5, -72 ) ]
+}
+
+[sub_resource type="Animation" id=34]
+resource_name = "ShowWindow"
+tracks/0/type = "value"
+tracks/0/path = NodePath("DialogueWindow:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 0.267943, 0.267943 ),
+"update": 0,
+"values": [ Vector2( 47.5, -72 ), Vector2( 47.5, 18 ) ]
+}
 
 [node name="World" type="Spatial"]
 
@@ -593,5 +633,52 @@ shadow_bias = -0.37
 [node name="FishHint" parent="." instance=ExtResource( 7 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.28892, 0, 3.22577 )
 
+[node name="DialoguePanel" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DialogueWindow" type="Panel" parent="DialoguePanel"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -112.5
+margin_top = -72.0
+margin_right = 112.5
+margin_bottom = -8.0
+grow_horizontal = 2
+rect_pivot_offset = Vector2( 112, 32 )
+custom_styles/panel = SubResource( 32 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="DialoguePanel/DialogueWindow"]
+margin_left = 5.44543
+margin_top = 3.55455
+margin_right = 221.445
+margin_bottom = 58.5546
+custom_fonts/font = SubResource( 33 )
+text = "click and drag to fish"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DialoguePanel"]
+process_priority = 1
+anims/HideWindow = SubResource( 35 )
+anims/ShowWindow = SubResource( 34 )
+
+[node name="Tutorial" type="Node" parent="."]
+script = ExtResource( 18 )
+
+[node name="Timer" type="Timer" parent="Tutorial"]
+one_shot = true
+autostart = true
+
 [connection signal="timeout" from="boat/hint-timer" to="boat" method="_on_hinttimer_timeout"]
 [connection signal="pressed" from="boat/result/Button" to="boat/result" method="_on_Button_pressed"]
+[connection signal="timeout" from="Tutorial/Timer" to="Tutorial" method="_on_Timer_timeout"]
