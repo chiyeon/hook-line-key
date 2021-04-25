@@ -223,7 +223,7 @@ func _process(delta):
 				else:
 					lineDistance = maxDepth;
 					LockBobber();
-				depthGageHookIndicator.rect_position.y = 20 + (lineDistance + 1) * depthGageMapScale;
+				depthGageHookIndicator.rect_position.y = 30 + (lineDistance) * depthGageMapScale;
 			
 			# visually move bobber to water
 			bobberInstance.transform.origin = bobberInstance.transform.origin.linear_interpolate(bobberInstancePosition, 0.1);
