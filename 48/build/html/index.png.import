@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/hook-line-key.png-045833720265e2acf2dc7f81fc8b82ff.stex"
+path="res://.import/index.png-2f5d0447c45dfbd86e2b43ace3d05e10.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://build/html/hook-line-key.png"
-dest_files=[ "res://.import/hook-line-key.png-045833720265e2acf2dc7f81fc8b82ff.stex" ]
+source_file="res://build/html/index.png"
+dest_files=[ "res://.import/index.png-2f5d0447c45dfbd86e2b43ace3d05e10.stex" ]
 
 [params]
 

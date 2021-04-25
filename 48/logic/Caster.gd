@@ -53,7 +53,7 @@ var isBobberLocked = false;			# whether or not depth is static
 var hasThrownLine = false;
 var lineDistance = 0;					# length of fishing line. becomes static once bobber is locked
 var lineDropSpeed = 6;
-var maxDepth = 30;
+var maxDepth = 15;
 
 # depth gage stuff
 var depthGageMapScale = 3;
@@ -75,6 +75,8 @@ var rng = RandomNumberGenerator.new();
 
 var spawnFish = false;
 
+var tutorialFlip = false;
+
 enum FishRarity {
 	COMMON,
 	RARE,
@@ -86,11 +88,20 @@ func _ready():
 	clickIndicator.max_value = clickGoal;
 	clickCounter = clickGoal * clickStartPercentage;
 	
+	# if tutorial mode, make teh first level one fish
+	# also set depth
+	if(Global.tutorialMode):
+		SetDepth(15);
+		levelManager.UpgradeThresholds.insert(0, 1);
+	else:
+		SetDepth(30);
+		# first fish
+		AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+		
 	# set up level manager (assign maxDepth)
 	levelManager.Setup(self);
 	
-	# tempoary assign
-	#AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+		# tempoary assign
 	#AddFish(FishRarity.RARE, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 	#AddFish(FishRarity.MYTHICAL, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 
@@ -253,7 +264,7 @@ func ThrowLine():
 	hasThrownLine = true;
 
 	# show indicator on depth gage
-	depthGageHookIndicator.visible = true;
+	#depthGageHookIndicator.visible = true;
 	print("threw line!");
 
 func CatchLine():
@@ -285,7 +296,8 @@ func CatchLine():
 		bobberInstance.ShowBobber();
 
 		# hide indicator for depth gage where hook is
-		depthGageHookIndicator.visible = false;
+		#depthGageHookIndicator.visible = false;
+		depthGageHookIndicator.rect_position.y = 30;
 
 		# catch, delete bobber
 		hasThrownLine = false;
@@ -375,7 +387,7 @@ func CheckBobberCloseToFish(point):
 			print("near (xz: ", xzDist ,"), (y: ", yDist, ") a fish ID of ", fishNearBobberID);
 
 			# set timer
-			catchTimer.wait_time = rng.randf_range(1.5, 3) + (fish.rarity + 1);
+			catchTimer.wait_time = rng.randf_range(1.5, 3.76);
 			catchTimer.connect("timeout", self, "BiteLine");
 			catchTimer.start();
 
@@ -399,15 +411,15 @@ func TryFailBite(timer):
 func CatchFish():
 	print("caught fish!");
 
+	# add to score
+	levelManager.AddCatch();
+
 	# reel in line
 	CatchLine();
 
 	# show results screen
 	Global.isInputPaused = true;
 	resultsPanel.ShowItem(activeFishes[fishNearBobberID].GetRandomCatch());
-
-	# add to score
-	levelManager.AddCatch();
 
 	# remove from active fishes array
 	RemoveFish(fishNearBobberID);
@@ -439,6 +451,7 @@ func CatchFish():
 				rarity = 0;
 			var height = GetNewFishDepth();
 			AddFish(rarity, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), height, rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+		print("makinng new fihs. . >");
 
 func GetNewFishDepth():
 	var height: float = rng.randi_range(-3, -maxDepth);
@@ -451,17 +464,22 @@ func GetNewFishDepth():
 
 	return height;
 
+func SetDepth(_depth):
+	maxDepth = _depth;
+	var c: float = (maxDepth) / 60.0;
+	var value = c * 180 + 2;
+	fishableArea.rect_size.y = value;
+
 func UpgradeDepth():
+
+	tutorialFlip = true;
 
 	if(maxDepth >= 60):
 		# end game
 		pass;
 
-	print(maxDepth);
-	var c: float = (maxDepth + 15) / 60.0;
+	maxDepth += 15;
+	var c: float = (maxDepth) / 60.0;
 	var value = c * 180 + 2;
-	print(c);
-	print(value);
 	fishableAreaTween.interpolate_property(fishableArea, "rect_size:y", fishableArea.rect_size.y, value, 1, Tween.TRANS_SINE, Tween.EASE_OUT);
 	fishableAreaTween.start();
-	maxDepth += 15;

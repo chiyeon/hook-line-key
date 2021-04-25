@@ -1,6 +1,6 @@
 extends Node
 
-var UpgradeThresholds = [2, 5, 6]
+var UpgradeThresholds = [3, 5, 6]
 var currentUpgradeThreshold = 0;
 var currentNumCatches: float = 0;
 
@@ -39,9 +39,6 @@ func FinishTween(object, key):
 		tween.interpolate_property(levelProgressBar, "value", levelProgressBar.value, currentNumCatches, 2, Tween.TRANS_SINE, Tween.EASE_OUT);
 		tween.start();
 
-		# increase depth
-		caster.UpgradeDepth();
-
 func AddCatch():
 	# add to catches
 	currentNumCatches += 1;
@@ -53,4 +50,7 @@ func AddCatch():
 
 	# if we met the goal
 	if(currentNumCatches >= UpgradeThresholds[currentUpgradeThreshold]):
+		# increase depth
+		caster.UpgradeDepth();
+		print ("Level up! Depth expanded");
 		upgradeProgressBar = true;

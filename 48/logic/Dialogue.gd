@@ -5,10 +5,11 @@ var dialogueActive = false;
 onready var animPlayer: AnimationPlayer = $AnimationPlayer;
 onready var text: Label = $DialogueWindow/text
 
-func ShowDialogue(message):
+func ShowDialogue(message, debug=false):
 	# make sure only start dialogue if not in
 	if(dialogueActive):
-		return;
+		if(!debug):
+			return;
 	
 	# pause input so no accident inputs
 	Global.isInputPaused = true;
@@ -23,6 +24,10 @@ func ShowDialogue(message):
 func AdvanceDialogue():
 	HideDialogue();
 
+func ForceHide():
+	Global.isInputPaused = false;
+	dialogueActive = false;
+
 func HideDialogue():
 	Global.isInputPaused = false;
 	animPlayer.play("HideWindow");
@@ -31,7 +36,4 @@ func HideDialogue():
 func _process(delta):
 	if Input.is_action_just_pressed("Throw") and dialogueActive and !animPlayer.is_playing():
 		AdvanceDialogue();
-	
-	# debug
-	if Input.is_key_pressed(KEY_T):
-		ShowDialogue("monkey");
+

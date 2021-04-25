@@ -15,9 +15,9 @@
 [ext_resource path="res://textures/ui/left_click.png" type="Texture" id=13]
 [ext_resource path="res://logic/ShakeCamera.gd" type="Script" id=14]
 [ext_resource path="res://logic/LevelManager.gd" type="Script" id=15]
-[ext_resource path="res://fonts/ButterFontData.tres" type="DynamicFontData" id=16]
 [ext_resource path="res://logic/Dialogue.gd" type="Script" id=17]
 [ext_resource path="res://logic/Tutorial.gd" type="Script" id=18]
+[ext_resource path="res://fonts/ButterFontData.tres" type="DynamicFontData" id=19]
 
 [sub_resource type="PlaneMesh" id=1]
 
@@ -135,19 +135,12 @@ bg_color = Color( 0.333333, 0.333333, 0.333333, 1 )
 [sub_resource type="StyleBoxFlat" id=24]
 bg_color = Color( 0.172549, 0.172549, 0.172549, 1 )
 
-[sub_resource type="DynamicFontData" id=25]
-antialiased = false
-font_path = "res://fonts/Helvetica.ttf"
+[sub_resource type="DynamicFont" id=37]
+font_data = ExtResource( 19 )
 
-[sub_resource type="DynamicFont" id=26]
-size = 18
-use_mipmaps = true
-font_data = SubResource( 25 )
-
-[sub_resource type="DynamicFont" id=27]
+[sub_resource type="DynamicFont" id=36]
 size = 12
-use_mipmaps = true
-font_data = SubResource( 25 )
+font_data = ExtResource( 19 )
 
 [sub_resource type="StyleBoxFlat" id=28]
 bg_color = Color( 0.395567, 0.550781, 0.333481, 1 )
@@ -158,17 +151,22 @@ bg_color = Color( 0.29686, 0.410156, 0.251541, 1 )
 [sub_resource type="StyleBoxFlat" id=30]
 bg_color = Color( 0.526913, 0.761719, 0.431442, 1 )
 
+[sub_resource type="DynamicFontData" id=25]
+antialiased = false
+hinting = 0
+font_path = "res://fonts/Butter-Regular.ttf"
+
 [sub_resource type="DynamicFont" id=31]
 size = 12
 use_mipmaps = true
 font_data = SubResource( 25 )
 
 [sub_resource type="StyleBoxFlat" id=32]
-bg_color = Color( 0.109804, 0.109804, 0.109804, 1 )
+bg_color = Color( 0.109804, 0.109804, 0.109804, 0.690196 )
 
 [sub_resource type="DynamicFont" id=33]
 size = 18
-font_data = ExtResource( 16 )
+font_data = ExtResource( 19 )
 
 [sub_resource type="Animation" id=35]
 resource_name = "HideWindow"
@@ -327,7 +325,7 @@ __meta__ = {
 
 [node name="FishableAreaIndicator" type="Panel" parent="boat/depth-gage-master/depth-gage-panel"]
 margin_right = 8.0
-margin_bottom = 92.0
+margin_bottom = 47.0
 custom_styles/panel = SubResource( 16 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -393,12 +391,14 @@ __meta__ = {
 }
 
 [node name="hook" type="Panel" parent="boat/depth-gage-master/YSort"]
-visible = false
 margin_left = 4.0
 margin_top = 30.0
 margin_right = 12.0
 margin_bottom = 32.0
 custom_styles/panel = SubResource( 18 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="minigame" type="Control" parent="boat"]
 visible = false
@@ -512,7 +512,7 @@ anchor_right = 1.0
 anchor_bottom = 0.161
 margin_bottom = 2.408
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 26 )
+custom_fonts/font = SubResource( 37 )
 text = "success!"
 align = 1
 valign = 1
@@ -541,7 +541,7 @@ anchor_bottom = 0.161
 margin_top = 71.0
 margin_bottom = 73.408
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 26 )
+custom_fonts/font = SubResource( 37 )
 text = "a stinky fish"
 align = 1
 __meta__ = {
@@ -556,7 +556,7 @@ margin_top = 94.5
 margin_right = -34.0
 margin_bottom = 105.892
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 27 )
+custom_fonts/font = SubResource( 36 )
 text = "a fish that reeks of something unfishly"
 align = 1
 autowrap = true
@@ -635,7 +635,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.28892, 0, 3.22577 )
 
 [node name="DialoguePanel" type="Control" parent="."]
 anchor_right = 1.0
-anchor_bottom = 1.0
 script = ExtResource( 17 )
 __meta__ = {
 "_edit_use_anchors_": false
