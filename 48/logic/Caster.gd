@@ -38,6 +38,8 @@ onready var rightClickIndicator = $"minigame/right-click";
 onready var leftClickIndicator = $"minigame/left-click";
 onready var fishingLine = $"../fishing-line";
 
+onready var levelManager = $"LevelManager";
+
 # bobber instance
 var bobber = preload("res://scenes/Bobber.tscn");
 var bobberInstance;
@@ -75,10 +77,12 @@ enum FishRarity {
 }
 
 func _ready():
-	set_process_unhandled_input(true)
 	rng.randomize();
 	clickIndicator.max_value = clickGoal;
 	clickCounter = clickGoal * clickStartPercentage;
+
+	# set up level manager (assign maxDepth)
+	levelManager.Setup(self);
 	
 	# tempoary assign
 	AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
@@ -396,6 +400,9 @@ func CatchFish():
 	# show results screen
 	Global.isInputPaused = true;
 	resultsPanel.ShowItem(activeFishes[fishNearBobberID].GetRandomCatch());
+
+	# add to score
+	levelManager.AddCatch();
 
 	# remove from active fishes array
 	RemoveFish(fishNearBobberID);
