@@ -37,3 +37,5 @@ func _process(delta):
 	if Input.is_action_just_pressed("Throw") and dialogueActive and !animPlayer.is_playing():
 		AdvanceDialogue();
 
+func PlaySound():
+	$sound.play();

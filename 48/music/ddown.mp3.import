@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/ddown.mp3-b11c5dad80d87affa3559293272e84f7.mp3str"
+
+[deps]
+
+source_file="res://music/ddown.mp3"
+dest_files=[ "res://.import/ddown.mp3-b11c5dad80d87affa3559293272e84f7.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

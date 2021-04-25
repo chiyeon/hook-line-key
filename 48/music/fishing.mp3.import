@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/fishing.mp3-19bd078532905bed359d5135091d4006.mp3str"
+
+[deps]
+
+source_file="res://music/fishing.mp3"
+dest_files=[ "res://.import/fishing.mp3-19bd078532905bed359d5135091d4006.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

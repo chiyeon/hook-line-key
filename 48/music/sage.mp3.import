@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/sage.mp3-4e24096306facd3bf84ba90aa9d0ac2b.mp3str"
+
+[deps]
+
+source_file="res://music/sage.mp3"
+dest_files=[ "res://.import/sage.mp3-4e24096306facd3bf84ba90aa9d0ac2b.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

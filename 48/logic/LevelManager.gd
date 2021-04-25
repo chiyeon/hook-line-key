@@ -1,6 +1,6 @@
 extends Node
 
-var UpgradeThresholds = [3, 5, 6]
+var UpgradeThresholds = [3, 4, 5]
 var currentUpgradeThreshold = 0;
 var currentNumCatches: float = 0;
 
@@ -35,6 +35,10 @@ func FinishTween(object, key):
 		# set bar back to 100% to animate tween downards
 		levelProgressBar.value = levelProgressBar.max_value;
 
+		# messages
+		#if(UpgradeThresholds[currentUpgradeThreshold] == 5):
+			#get_node("/root/World/DialoguePanel").ShowDialogue("The keys must be at the bottom of this lake.");
+
 		# animating bar moving back
 		tween.interpolate_property(levelProgressBar, "value", levelProgressBar.value, currentNumCatches, 2, Tween.TRANS_SINE, Tween.EASE_OUT);
 		tween.start();
@@ -54,3 +58,4 @@ func AddCatch():
 		caster.UpgradeDepth();
 		print ("Level up! Depth expanded");
 		upgradeProgressBar = true;
+		

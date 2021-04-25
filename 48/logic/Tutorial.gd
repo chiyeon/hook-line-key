@@ -6,13 +6,13 @@ onready var caster = get_node("../boat");
 
 var Dialogue;
 var Messages = [
-	"My keys must be at the bottom!",#0
+	"Left click to advance dialogue",#0
 	"Right click n Drag to look around",#1
 	"Left click n Drag to aim, let go to cast",#2
 	"Left click again or wait to lock the hook in place",#3
 	"The depth of the hook is shown on the left",#4
 	"The usable range of your rod is in dark blue",#5
-	"Left click again to reel in",#6
+	"Left click again to cut the line",#6
 	"Find fish by looking for splashes or bubbles",#7
 	"Different colored bubbles take longer to show again",#8
 	"Use the depth gage to know where to lock the hook",#9
@@ -30,7 +30,7 @@ var Messages = [
 	"You also upgraded your fishing rod!",
 	"The top bar shows the fish needed for an upgrade",
 	"Each upgrade lets you go deeper and deeper.",
-	"Now go catch some fish!"
+	"Now where are those keys. . ."
 ]
 var dialogueState = -1;
 var waiting = false;
@@ -42,7 +42,7 @@ func _ready():
 	if(!Global.tutorialMode):
 		queue_free();
 	
-	#caster.disableLeftClick = true;
+	caster.disableLeftClick = true;
 
 func _on_Timer_timeout(debug=false):
 	Dialogue = get_node("/root/World/DialoguePanel");

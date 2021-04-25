@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/click.mp3-ca73a85eb89fdec222f553c17474e564.mp3str"
+
+[deps]
+
+source_file="res://music/click.mp3"
+dest_files=[ "res://.import/click.mp3-ca73a85eb89fdec222f553c17474e564.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

@@ -1,0 +1,404 @@
+[gd_scene load_steps=32 format=2]
+
+[ext_resource path="res://models/boat.fbx" type="PackedScene" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://textures/particles/circle.png" type="Texture" id=3]
+[ext_resource path="res://logic/MainMenu.gd" type="Script" id=4]
+[ext_resource path="res://music/sage.mp3" type="AudioStream" id=5]
+[ext_resource path="res://logic/boat.gd" type="Script" id=6]
+[ext_resource path="res://logic/ShakeCamera.gd" type="Script" id=7]
+[ext_resource path="res://textures/Icon.png" type="Texture" id=8]
+[ext_resource path="res://fonts/ButterFontData.tres" type="DynamicFontData" id=12]
+[ext_resource path="res://models/boat-hull.tscn" type="PackedScene" id=13]
+[ext_resource path="res://models/fishing_rod.fbx" type="PackedScene" id=14]
+
+[sub_resource type="PlaneMesh" id=1]
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+params_diffuse_mode = 1
+albedo_color = Color( 0.6, 0.890196, 0.917647, 1 )
+
+[sub_resource type="BoxShape" id=3]
+
+[sub_resource type="Environment" id=4]
+fog_depth_begin = 99.6
+fog_depth_end = 10.4
+glow_intensity = 2.23
+glow_strength = 1.2
+glow_bloom = 0.04
+adjustment_enabled = true
+adjustment_contrast = 1.06
+
+[sub_resource type="Animation" id=5]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("fishing-rod/model:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.9, 1, 2 ),
+"transitions": PoolRealArray( 1.93187, 0.353553, 2.37841, 1 ),
+"update": 0,
+"values": [ Vector3( 58.533, 0, 0 ), Vector3( 140.922, 0, 0 ), Vector3( 2.361, 0, 0 ), Vector3( 58.533, 0, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("../..")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "ThrowLine"
+} ]
+}
+
+[sub_resource type="CylinderMesh" id=6]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 15.0
+
+[sub_resource type="SpatialMaterial" id=7]
+render_priority = 1
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+params_diffuse_mode = 1
+params_blend_mode = 1
+albedo_texture = ExtResource( 3 )
+
+[sub_resource type="QuadMesh" id=8]
+material = SubResource( 7 )
+
+[sub_resource type="Curve" id=9]
+_data = [ Vector2( 0, 0 ), 0.0, 3.09424, 0, 0, Vector2( 1, 1 ), 0.0967616, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=10]
+offsets = PoolRealArray( 0, 0.456067, 0.803347 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.136719, 0.136719, 0.136719, 1, 0, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=11]
+size = 32
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 12 )
+
+[sub_resource type="DynamicFont" id=12]
+size = 14
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 12 )
+
+[sub_resource type="StyleBoxFlat" id=13]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="StyleBoxFlat" id=14]
+bg_color = Color( 0.439216, 0.439216, 0.439216, 0.329412 )
+
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="DynamicFont" id=16]
+font_data = ExtResource( 12 )
+
+[sub_resource type="StyleBoxFlat" id=17]
+bg_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="Animation" id=18]
+resource_name = "Fade"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Fader:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.8, 1.5 ),
+"transitions": PoolRealArray( 0.148651, 5.65685, 5.65685 ),
+"update": 0,
+"values": [ Vector2( 323.666, 0 ), Vector2( 0, 0 ), Vector2( -324.196, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.8 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "ChangeScene"
+} ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("../AudioStreamPlayer:volume_db")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, -50.0 ]
+}
+
+[sub_resource type="StyleBoxFlat" id=19]
+bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="Animation" id=20]
+resource_name = "Hide"
+tracks/0/type = "value"
+tracks/0/path = NodePath("splash:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 1.001 ),
+"transitions": PoolRealArray( 3.60501, 3.60501, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 320 ), Vector2( 0, 246.269 ) ]
+}
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.935222, -0.0411737, 0.35166, 0, 0.993215, 0.116289, -0.354063, -0.108756, 0.928877, 12.46, 5.929, 31.071 )
+projection = 1
+current = true
+size = 8.0
+script = ExtResource( 7 )
+
+[node name="water" type="MeshInstance" parent="."]
+transform = Transform( 225, 0, 0, 0, 1, 0, 0, 0, 225, 0, -0.01, 0 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="StaticBody" type="StaticBody" parent="water"]
+
+[node name="CollisionShape" type="CollisionShape" parent="water/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0 )
+shape = SubResource( 3 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 4 )
+
+[node name="boat" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.468314, 0 )
+
+[node name="boat-model" parent="boat" instance=ExtResource( 1 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.6, 0 )
+script = ExtResource( 6 )
+
+[node name="model" type="Position3D" parent="boat/boat-model"]
+transform = Transform( 0.998807, 3.48649e-05, -0.0488323, -3.49066e-05, 1, 0, 0.0488323, 1.70457e-06, 0.998807, 0, -0.072, 0 )
+
+[node name="fishing-rod" type="Spatial" parent="boat/boat-model/model"]
+transform = Transform( 1, 1.17073e-12, 0, 1.17074e-12, 1, -3.55271e-15, 0, 1.06581e-14, 1, 0, 0, 0 )
+
+[node name="model" parent="boat/boat-model/model/fishing-rod" instance=ExtResource( 14 )]
+transform = Transform( 0.35, -1.45519e-10, -4.36557e-11, -8.63542e-13, 0.175, -0.303109, 2.91038e-11, 0.303109, 0.175, 2.71712e-11, 0.21114, -0.166284 )
+
+[node name="rod-tip" type="Position3D" parent="boat/boat-model/model/fishing-rod/model"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.0288565, -2.23365 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="boat/boat-model/model"]
+anims/Cast = SubResource( 5 )
+
+[node name="RayCast" type="RayCast" parent="boat/boat-model/model"]
+transform = Transform( 0.175, -0.000125493, 4.12289e-05, 0.000130746, 0.172341, -0.0303884, -1.88109e-05, 0.0303885, 0.172341, 4.20641e-11, 0.893229, -0.548426 )
+enabled = true
+cast_to = Vector3( 0, -100, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="boat/boat-model/model/RayCast"]
+transform = Transform( 1, 0.000671927, -0.000280769, -0.000671926, 1, 3.27826e-07, 0.000280769, 2.98023e-08, 1, -0.00511156, -7.63341, -0.0624619 )
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="boat-hull" parent="boat/boat-model" instance=ExtResource( 13 )]
+transform = Transform( 0.99, 0, 0, 0, 0.99, 0, 0, 0, 0.99, 0, 0, 0 )
+
+[node name="splashes" type="CPUParticles" parent="boat"]
+transform = Transform( 4, 0, 0, 0, -1.74846e-07, 4, 0, -4, -1.74846e-07, 0, 0.00336537, 0.435687 )
+amount = 2
+lifetime = 8.0
+randomness = 0.37
+mesh = SubResource( 8 )
+direction = Vector3( 0, 1, 0 )
+gravity = Vector3( 0, 0, 0 )
+scale_amount = 2.0
+scale_amount_random = 0.49
+scale_amount_curve = SubResource( 9 )
+color_ramp = SubResource( 10 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="boat"]
+transform = Transform( 0.878773, -0.0084099, 0.477165, -0.452536, -0.332197, 0.82756, 0.151553, -0.943173, -0.295732, 0, 5.72564, 0 )
+light_energy = 1.25
+light_indirect_energy = 1.23
+shadow_enabled = true
+shadow_color = Color( 0.827451, 0.827451, 0.827451, 1 )
+shadow_bias = -0.37
+
+[node name="MainMenu" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Menu" type="Control" parent="MainMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="MainMenu/Menu"]
+margin_left = 26.9004
+margin_top = 25.4846
+margin_right = 117.9
+margin_bottom = 127.485
+custom_fonts/font = SubResource( 11 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Hook
+Line
+Key"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="subtext" type="Label" parent="MainMenu/Menu"]
+margin_left = 4.37259
+margin_top = 204.813
+margin_right = 230.373
+margin_bottom = 306.813
+custom_fonts/font = SubResource( 12 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Made with          in under 
+48 hours for Ludum Dare 48"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="MainMenu/Menu/subtext"]
+margin_left = 77.9989
+margin_top = -6.16911
+margin_right = 132.999
+margin_bottom = 47.8309
+rect_scale = Vector2( 0.5, 0.5 )
+custom_styles/hover = SubResource( 13 )
+custom_styles/pressed = SubResource( 14 )
+custom_styles/normal = SubResource( 15 )
+shortcut_in_tooltip = false
+icon = ExtResource( 2 )
+expand_icon = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="author" type="Label" parent="MainMenu/Menu"]
+margin_left = 259.285
+margin_top = 220.723
+margin_right = 485.285
+margin_bottom = 322.723
+custom_fonts/font = SubResource( 12 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "chiyeon"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/Menu"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -123.474
+margin_top = -20.0
+margin_right = -12.474
+margin_bottom = 28.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="playbutton" type="Button" parent="MainMenu/Menu/VBoxContainer"]
+margin_right = 111.0
+margin_bottom = 22.0
+focus_mode = 0
+custom_fonts/font = SubResource( 16 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0.254902, 0.254902, 0.254902, 1 )
+custom_colors/font_color_pressed = Color( 0.513726, 0.513726, 0.513726, 1 )
+enabled_focus_mode = 0
+text = "play"
+flat = true
+
+[node name="collectablesbutton" type="Button" parent="MainMenu/Menu/VBoxContainer"]
+margin_top = 26.0
+margin_right = 111.313
+margin_bottom = 48.0
+focus_mode = 0
+custom_fonts/font = SubResource( 16 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0.254902, 0.254902, 0.254902, 1 )
+custom_colors/font_color_pressed = Color( 0.513726, 0.513726, 0.513726, 1 )
+enabled_focus_mode = 0
+text = "collectables"
+flat = true
+
+[node name="Collectables" type="Control" parent="MainMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Fader" type="Panel" parent="MainMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 323.666
+margin_right = 323.666
+custom_styles/panel = SubResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MainMenu"]
+anims/Fade = SubResource( 18 )
+
+[node name="splash" type="Panel" parent="MainMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = 0.00115967
+custom_styles/panel = SubResource( 19 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="MainMenu/splash"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -24.0
+margin_top = -24.0
+margin_right = 24.0
+margin_bottom = 24.0
+texture = ExtResource( 8 )
+expand = true
+
+[node name="SplashHide" type="AnimationPlayer" parent="MainMenu"]
+anims/Hide = SubResource( 20 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+autoplay = true
+
+[connection signal="pressed" from="MainMenu/Menu/VBoxContainer/playbutton" to="MainMenu" method="Play"]

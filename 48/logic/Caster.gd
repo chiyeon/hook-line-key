@@ -136,6 +136,8 @@ func _process(delta):
 		# cap at 0
 		if(clickCounter <= 0):
 			clickCounter = 0;
+			RemoveFish(fishNearBobberID);
+			$AudioMinigame.stop();
 			CatchLine();
 
 		# only alternating between right/left works
@@ -146,6 +148,8 @@ func _process(delta):
 				print(clickGoal - clickCounter + 1, " left");
 				leftClickIndicator.rect_scale = Vector2(1, 1);
 				rightClickIndicator.rect_scale = Vector2(1.2, 1.2);
+				$AudioClick.pitch_scale = rng.randf_range(0.7, 1.3);
+				$AudioClick.play();
 		else:
 			if Input.is_action_just_pressed("Reel"):
 				clickCounter += 1;
@@ -153,11 +157,14 @@ func _process(delta):
 				print(clickGoal - clickCounter + 1, " left");
 				leftClickIndicator.rect_scale = Vector2(1.2, 1.2);
 				rightClickIndicator.rect_scale = Vector2(1, 1);
+				$AudioClick2.pitch_scale = rng.randf_range(0.7, 1.3);
+				$AudioClick2.play();
 
 		# if we hit goal minigame over
 		if(clickCounter >= clickGoal):
 			minigamePanel.visible = false;
 			isInMinigame = false;
+			$AudioMinigame.stop();
 			CatchFish();
 	else:
 		if(isRodReturningToPosition):
@@ -241,6 +248,8 @@ func _process(delta):
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and isBobberLocked and isCatchingFish:	# if fish bit, click to catch
 			isInMinigame = true;
 			minigamePanel.visible = true;
+			# play minigame music
+			$AudioMinigame.play();
 			print("started catching minigame click!");
 		elif Input.is_action_just_pressed("Throw") and hasThrownLine and isBobberLocked and !isCatchingFish: # reel in
 			CatchLine();
@@ -260,6 +269,7 @@ func ThrowLine():
 	bobberInstance = bobber.instance();
 	bobberInstance.global_transform.origin = rodTip.global_transform.origin;
 	add_child(bobberInstance);
+	$AudioPlop.play();
 
 	# draw line
 	fishingLine.visible = true;
@@ -273,6 +283,9 @@ func ThrowLine():
 
 func CatchLine():
 	if(hasThrownLine):
+		# play sound
+		$AudioReel.play();
+		
 		# set near fish false
 		bobberNearActiveFish = false;
 
@@ -294,6 +307,7 @@ func CatchLine():
 
 		# no minigame
 		isInMinigame = false;
+		$AudioMinigame.stop();
 		minigamePanel.visible = false;
 
 		# reveal bobber
@@ -314,6 +328,10 @@ func CatchLine():
 func LockBobber():
 	isBobberLocked = true;
 	print("Bobber locked at a depth of ", lineDistance, " at ", bobberInstance.transform.origin.x, ", ", bobberInstance.transform.origin.z);
+
+	# play sound
+	$AudioClickIn.pitch_scale = rng.randf_range(0.7, 1.3);
+	$AudioClickIn.play();
 
 	# check if player is throwing near a fish
 	CheckBobberCloseToFish(bobberInstancePosition);
@@ -374,6 +392,8 @@ func RemoveFish(fishID):
 	depthGageHints.get(fish).queue_free();
 	hints.get(fish).queue_free();
 	activeFishes.remove(fishID);
+	
+	CheckFishes();
 
 func CheckBobberCloseToFish(point):
 	if(bobberNearActiveFish):
@@ -398,6 +418,10 @@ func CheckBobberCloseToFish(point):
 func BiteLine():
 	print("Fish ", fishNearBobberID, " bit the line !");
 	bobberInstance.HideBobber();
+	# play sound
+	$AudioBite.pitch_scale = rng.randf_range(0.8, 1.2);
+	$AudioBite.play();
+	
 	isCatchingFish = true;
 	var timer = Timer.new();
 	timer.wait_time = 3;
@@ -410,10 +434,14 @@ func TryFailBite(timer):
 	if(isInMinigame):
 		return;
 	else:
+		RemoveFish(fishNearBobberID);
 		CatchLine();
 
 func CatchFish():
 	print("caught fish!");
+
+	# play cattch fish sound
+	$AudioCatchFish.play();
 
 	# add to score
 	levelManager.AddCatch();
@@ -427,7 +455,10 @@ func CatchFish():
 
 	# remove from active fishes array
 	RemoveFish(fishNearBobberID);
+	
+	CheckFishes();
 
+func CheckFishes():
 	# check end game conditions
 	if(activeFishes.size() == 0):
 		# end game

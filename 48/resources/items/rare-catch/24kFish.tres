@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://logic/Item.gd" type="Script" id=1]
-[ext_resource path="res://textures/items/WIP.png" type="Texture" id=2]
+[ext_resource path="res://textures/items/24kfish.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
