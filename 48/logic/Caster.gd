@@ -48,12 +48,12 @@ var isBobberLocked = false;			# whether or not depth is static
 var hasThrownLine = false;
 var lineDistance = 0;					# length of fishing line. becomes static once bobber is locked
 var lineDropSpeed = 6;
-var maxDepth = 15;
+var maxDepth = 30;
 
 # depth gage stuff
 var depthGageMapScale = 3;
 onready var depthGagePanel: Panel = $"depth-gage-master/depth-gage-panel";
-onready var depthGageHookIndicator: Panel = $"depth-gage-master/depth-gage-panel/hook";
+onready var depthGageHookIndicator: Panel = $"depth-gage-master/YSort/hook";
 # list of all depth gage hints to destroy later
 var depthGageHints = {};
 
@@ -81,7 +81,7 @@ func _ready():
 	clickCounter = clickGoal * clickStartPercentage;
 	
 	# tempoary assign
-	#AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+	AddFish(FishRarity.COMMON, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 	#AddFish(FishRarity.RARE, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 	#AddFish(FishRarity.MYTHICAL, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), rng.randi_range(-3, -maxDepth), rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
 
@@ -170,6 +170,7 @@ func _process(delta):
 		elif Input.is_action_just_released("Throw") and !hasThrownLine and !isBobberLocked and isHoldingMouse:
 			isHoldingMouse = false;
 			isRodReturningToPosition = true;
+			
 			bobberIndicator.visible = false;
 
 			mouseDragFirstIndicator.visible = false;
@@ -218,7 +219,7 @@ func _process(delta):
 				else:
 					lineDistance = maxDepth;
 					LockBobber();
-				depthGageHookIndicator.rect_position.y = (lineDistance + 1) * depthGageMapScale;
+				depthGageHookIndicator.rect_position.y = 20 + (lineDistance + 1) * depthGageMapScale;
 			
 			# visually move bobber to water
 			bobberInstance.transform.origin = bobberInstance.transform.origin.linear_interpolate(bobberInstancePosition, 0.1);
@@ -287,7 +288,7 @@ func CatchLine():
 
 func LockBobber():
 	isBobberLocked = true;
-	print("Bobber locked at a depth of ", lineDistance);
+	print("Bobber locked at a depth of ", lineDistance, " at ", bobberInstance.transform.origin.x, ", ", bobberInstance.transform.origin.z);
 
 	# check if player is throwing near a fish
 	CheckBobberCloseToFish(bobberInstancePosition);
@@ -296,7 +297,7 @@ func AddFish(rarity, location):
 	# create instance of bubbling hint
 	var fishHintInstance = fishHint.instance();
 	add_child(fishHintInstance);
-	fishHintInstance.global_transform.origin = Vector3(location.x, 0, location.z);
+	fishHintInstance.transform.origin = Vector3(location.x, 0, location.z);
 	
 	# create timer for the hint to loop
 	var hintTimer = Timer.new();
@@ -402,4 +403,38 @@ func CatchFish():
 	# check end game conditions
 	if(activeFishes.size() == 0):
 		# end game
-		print("level clear!");
+		#print("level clear!");
+
+		# spawn more fishes
+		var numFishesToSpawn = 0;
+
+		var c = rng.randf();
+		if(c > 0.75):
+			numFishesToSpawn = 3;
+		elif(c > 0.5):
+			numFishesToSpawn = 2;
+		else:
+			numFishesToSpawn = 1;
+		
+		for i in numFishesToSpawn:
+			var j = rng.randf();
+			var rarity = 0;
+			if(j > 0.75):
+				rarity = 2;
+			elif(j > 0.5):
+				rarity = 1;
+			else:
+				rarity = 0;
+			var height = GetNewFishDepth();
+			AddFish(rarity, Vector3(rng.randi_range(3, 6) * pow(-1, rng.randi_range(1, 2)), height, rng.randi_range(4, 5) * pow(-1, rng.randi_range(1, 2))));
+
+func GetNewFishDepth():
+	var height: float = rng.randi_range(-3, -maxDepth);
+	for fish in activeFishes:
+		if(abs(fish.location.y - height) < 2):
+			if (height + 2 < maxDepth):
+				height += 2;
+			elif (height - 2 >= -2):
+				height -= 2;
+
+	return height;

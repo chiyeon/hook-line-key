@@ -99,14 +99,14 @@ material = SubResource( 11 )
 [sub_resource type="StyleBoxFlat" id=14]
 bg_color = Color( 0.109804, 0.243137, 0.34902, 0.588235 )
 
-[sub_resource type="StyleBoxFlat" id=15]
-bg_color = Color( 1, 1, 1, 1 )
-
 [sub_resource type="StyleBoxFlat" id=29]
 bg_color = Color( 0.0941176, 0.180392, 0.247059, 0.823529 )
 
 [sub_resource type="StyleBoxFlat" id=28]
 bg_color = Color( 0.858824, 0.866667, 0.87451, 0.823529 )
+
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="StyleBoxFlat" id=24]
 bg_color = Color( 0.270588, 0.270588, 0.270588, 0.470588 )
@@ -263,15 +263,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="hook" type="Panel" parent="boat/depth-gage-master/depth-gage-panel"]
-visible = false
-margin_right = 8.0
-margin_bottom = 2.0
-custom_styles/panel = SubResource( 15 )
-
 [node name="FishableAreaIndicator" type="Panel" parent="boat/depth-gage-master/depth-gage-panel"]
-margin_right = 8.0
-margin_bottom = 52.0
+margin_left = -0.235962
+margin_top = 0.235977
+margin_right = 7.76404
+margin_bottom = 102.236
 custom_styles/panel = SubResource( 29 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -333,6 +329,14 @@ custom_styles/panel = SubResource( 28 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="hook" type="Panel" parent="boat/depth-gage-master/YSort"]
+visible = false
+margin_left = 3.74576
+margin_top = 20.0
+margin_right = 11.7458
+margin_bottom = 22.0
+custom_styles/panel = SubResource( 15 )
 
 [node name="minigame" type="Control" parent="boat"]
 visible = false

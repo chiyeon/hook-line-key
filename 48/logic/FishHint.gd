@@ -5,6 +5,6 @@ onready var splashes: CPUParticles = $splashes;
 
 func ShowHint():
 	if(bubbles and splashes):
+		splashes.emitting = true;
 		for bubble in bubbles:
 			bubble.emitting = true;
-		splashes.emitting = true;
