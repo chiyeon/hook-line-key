@@ -36,6 +36,7 @@ onready var bobberIndicator = $"bobber-indicator";
 
 onready var rightClickIndicator = $"minigame/right-click";
 onready var leftClickIndicator = $"minigame/left-click";
+onready var fishingLine = $"../fishing-line";
 
 # bobber instance
 var bobber = preload("res://scenes/Bobber.tscn");
@@ -203,6 +204,13 @@ func _process(delta):
 		
 		# increase line distance after throwing, interpolate the bobber to the water spot
 		if(hasThrownLine):
+			# draw fishing line
+			fishingLine.clear();
+			fishingLine.begin(Mesh.PRIMITIVE_LINE_LOOP);
+			fishingLine.add_vertex(rodTip.global_transform.origin);
+			fishingLine.add_vertex(bobberInstance.global_transform.origin);
+			fishingLine.end();
+
 			# make hook go deeper at specified rate until max if bobber ISNT locked
 			if(!isBobberLocked):
 				if(lineDistance < maxDepth):
@@ -227,6 +235,9 @@ func ThrowLine():
 	bobberInstance = bobber.instance();
 	bobberInstance.global_transform.origin = rodTip.global_transform.origin;
 	add_child(bobberInstance);
+
+	# draw line
+	fishingLine.visible = true;
 	
 	# throw line
 	hasThrownLine = true;
@@ -239,6 +250,9 @@ func CatchLine():
 	if(hasThrownLine):
 		# set near fish false
 		bobberNearActiveFish = false;
+
+		# cut line
+		fishingLine.visible = false;
 
 		# unlock bobber
 		isBobberLocked = false;
