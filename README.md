@@ -1,4 +1,4 @@
-![boat](https://imgur.com/a/fD1Qy43)
+![boat](https://i.imgur.com/cTT05rI.gif)
 
 # hook-line-key
 is a game about fishing.
