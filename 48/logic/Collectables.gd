@@ -1,5 +1,10 @@
 extends Control
 
+func _ready():
+	# JUST IN CASE
+	if(!Global.tutorialMode):
+		get_node("/root/World/boat").disableLeftClick = false;
+
 func _process(delta):
 	if Input.is_action_just_pressed("Menu"):
 		ToggleWindow();
