@@ -39,19 +39,19 @@ func FinishTween(object, key):
 		if(currentUpgradeThreshold >= UpgradeThresholds.size()):
 			get_tree().change_scene("res://scenes/ending.tscn");
 			return;
-		
-		# update that on progress bar
-		levelProgressBar.max_value = UpgradeThresholds[currentUpgradeThreshold];
-		# set bar back to 100% to animate tween downards
-		levelProgressBar.value = levelProgressBar.max_value;
+		else:
+			# update that on progress bar
+			levelProgressBar.max_value = UpgradeThresholds[currentUpgradeThreshold];
+			# set bar back to 100% to animate tween downards
+			levelProgressBar.value = levelProgressBar.max_value;
 
-		# messages
-		#if(UpgradeThresholds[currentUpgradeThreshold] == 5):
-			#get_node("/root/World/DialoguePanel").ShowDialogue("The keys must be at the bottom of this lake.");
+			# messages
+			#if(UpgradeThresholds[currentUpgradeThreshold] == 5):
+				#get_node("/root/World/DialoguePanel").ShowDialogue("The keys must be at the bottom of this lake.");
 
-		# animating bar moving back
-		tween.interpolate_property(levelProgressBar, "value", levelProgressBar.value, currentNumCatches, 2, Tween.TRANS_SINE, Tween.EASE_OUT);
-		tween.start();
+			# animating bar moving back
+			tween.interpolate_property(levelProgressBar, "value", levelProgressBar.value, currentNumCatches, 2, Tween.TRANS_SINE, Tween.EASE_OUT);
+			tween.start();
 
 func AddCatch():
 	# add to catches
