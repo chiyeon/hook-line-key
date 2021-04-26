@@ -26,11 +26,11 @@ var Messages = [
 	"Fish take no longer than 5 seconds to bite",#17
 	"If the bobber doesn't dip by then, wrong depth! Now try",#18
 	"You just caught something!",
-	"Items are stored instantly. There are many to collect",
+	"Check your collection in the Escape menu.",
 	"You also upgraded your fishing rod!",
 	"The top bar shows the fish needed for an upgrade",
 	"Each upgrade lets you go deeper and deeper.",
-	"Now where are those keys. . ."
+	"Now the key must have sunk to the bottom..."
 ]
 var dialogueState = -1;
 var waiting = false;
@@ -40,9 +40,10 @@ var waiting3 = false;
 
 func _ready():
 	if(!Global.tutorialMode):
+		caster.disableLeftClick = false;
 		queue_free();
-	
-	caster.disableLeftClick = true;
+	else:
+		caster.disableLeftClick = true;
 
 func _on_Timer_timeout(debug=false):
 	Dialogue = get_node("/root/World/DialoguePanel");

@@ -8,3 +8,5 @@ script = ExtResource( 1 )
 icon = ExtResource( 2 )
 name = "Ancient Bow"
 description = "A relic from time long passed."
+rarity = 2
+id = 8

@@ -8,3 +8,5 @@ script = ExtResource( 1 )
 icon = ExtResource( 2 )
 name = "Bluegill"
 description = "Not seeing any blue myself."
+rarity = 0
+id = 0

@@ -8,3 +8,5 @@ script = ExtResource( 1 )
 icon = ExtResource( 2 )
 name = "24 Karat Fish"
 description = "Its heavy!"
+rarity = 1
+id = 12

@@ -11,6 +11,11 @@ onready var levelProgressBar = $"LevelProgress"
 
 var caster;
 
+func _process(delta):
+	if(Global.debugMode):
+		if(Input.is_action_just_pressed("debug")):
+			AddCatch();
+
 func Setup(_caster):
 	caster = _caster;
 	levelProgressBar.max_value = UpgradeThresholds[currentUpgradeThreshold];
@@ -30,6 +35,11 @@ func FinishTween(object, key):
 		currentNumCatches = 0;
 		# increase # of required catches for next time
 		currentUpgradeThreshold += 1;
+		
+		if(currentUpgradeThreshold >= UpgradeThresholds.size()):
+			get_tree().change_scene("res://scenes/ending.tscn");
+			return;
+		
 		# update that on progress bar
 		levelProgressBar.max_value = UpgradeThresholds[currentUpgradeThreshold];
 		# set bar back to 100% to animate tween downards

@@ -8,3 +8,5 @@ script = ExtResource( 2 )
 icon = ExtResource( 1 )
 name = "Stinky Fish"
 description = "the stench is unholy"
+rarity = 0
+id = 4

@@ -118,7 +118,6 @@ func _ready():
 		#model.rotation.y = lerp_angle(model.rotation.y, -angle + offset, 0.15);
 
 func _process(delta):
-
 	if isInMinigame:
 		# update indicator
 		clickIndicator.value = clickCounter;
@@ -448,11 +447,34 @@ func CatchFish():
 
 	# reel in line
 	CatchLine();
+	
+	# get random item
+	var item = activeFishes[fishNearBobberID].GetRandomCatch();
 
 	# show results screen
 	Global.isInputPaused = true;
-	resultsPanel.ShowItem(activeFishes[fishNearBobberID].GetRandomCatch());
+	resultsPanel.ShowItem(item);
 
+	# update colectables
+	CollectedItems.items[item.id] = true;
+	
+	var collectables = get_node("/root/World/Collectables");
+	var c1 = collectables.get_child(0).get_child(1).get_child(0).get_child(0).get_child(0).get_child(1);
+	var c2 = collectables.get_child(0).get_child(1).get_child(0).get_child(0).get_child(1).get_child(1);
+	var c3 = collectables.get_child(0).get_child(1).get_child(0).get_child(0).get_child(2).get_child(1);
+	var c4 = collectables.get_child(0).get_child(1).get_child(0).get_child(0).get_child(3).get_child(1);
+	
+	var col = c1.get_node(str(item.id));
+	if(col == null):
+		col = c2.get_node(str(item.id));
+		if(col == null):
+			col = c3.get_node(str(item.id));
+			if(col == null):
+				col = c4.get_node(str(item.id));
+	
+	if col != null:
+		col.UpdateItem();
+	
 	# remove from active fishes array
 	RemoveFish(fishNearBobberID);
 	

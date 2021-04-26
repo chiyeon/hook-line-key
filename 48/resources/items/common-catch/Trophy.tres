@@ -8,3 +8,5 @@ script = ExtResource( 1 )
 icon = ExtResource( 2 )
 name = "1st Place Trophy"
 description = "I guess you \"won\" it."
+rarity = 3
+id = 6

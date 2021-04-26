@@ -8,3 +8,5 @@ script = ExtResource( 1 )
 icon = ExtResource( 2 )
 name = "Soda Can"
 description = "Thats not soda."
+rarity = 0
+id = 3

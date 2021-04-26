@@ -8,3 +8,5 @@ script = ExtResource( 2 )
 icon = ExtResource( 1 )
 name = "Stinky Seaweed"
 description = "Not my kind of grass"
+rarity = 0
+id = 5

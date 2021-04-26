@@ -8,3 +8,5 @@ script = ExtResource( 1 )
 icon = ExtResource( 2 )
 name = "Concert Ticket"
 description = "Dang, 37 years late."
+rarity = 1
+id = 13

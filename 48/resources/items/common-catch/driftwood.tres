@@ -8,3 +8,5 @@ script = ExtResource( 2 )
 icon = ExtResource( 1 )
 name = "Driftwood"
 description = "It's wood, it's drifting"
+rarity = 0
+id = 1

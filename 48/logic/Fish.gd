@@ -64,19 +64,11 @@ func GetRandomCatch():
 					catch = load("res://resources/items/rare-catch/expensive-check.tres");
 		2: # mythical
 			if(key > 0.95):	# godly drop 5%
-				catch = load("res://resources/items/mythical-catch/bbestitem.tres");
+				catch = load("res://resources/items/mythical-catch/kraken.tres");
 			elif(key > 0.85):	# good drop 10%
-				catch = load("res://resources/items/mythical-catch/secondbestitem.tres");
+				catch = load("res://resources/items/mythical-catch/smartphone.tres");
 			elif(key > 0.35):	# ok drop 50%
-				var c = rng.randf();
-				if(c > 0.5):
-					catch = load("res://resources/items/mythical-catch/iridescent-shark.tres");
-				else:
-					catch = load("res://resources/items/mythical-catch/shad.tres");
+				catch = load("res://resources/items/mythical-catch/iridescent-shark.tres");
 			elif(key >= 0):	# bad drop 35%
-				var c = rng.randf();
-				if(c > 0.5):
-					catch = load("res://resources/items/mythical-catch/ancient-bow.tres");
-				else:
-					catch = load("res://resources/items/mythical-catch/smartphone.tres");
+				catch = load("res://resources/items/mythical-catch/ancient-bow.tres");
 	return catch;

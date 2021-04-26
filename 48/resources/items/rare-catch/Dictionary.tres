@@ -8,3 +8,5 @@ script = ExtResource( 1 )
 icon = ExtResource( 2 )
 name = "Dictionary"
 description = "What does nirvanic mean again?"
+rarity = 1
+id = 14

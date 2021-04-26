@@ -8,3 +8,5 @@ script = ExtResource( 1 )
 icon = ExtResource( 2 )
 name = "Yellowfin Tuna"
 description = "A fish of bright yellow"
+rarity = 0
+id = 7
